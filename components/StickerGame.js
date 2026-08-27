@@ -13,157 +13,73 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import Svg, { Rect, Path, Ellipse } from 'react-native-svg';
+import Svg, {
+  Rect,
+  Path,
+  Ellipse,
+  Defs,
+  LinearGradient as SvgGradient,
+  RadialGradient,
+  Stop,
+  Line,
+} from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
 
-const PRODUCT_H = Math.min(height * 0.42, 400);
-const PRODUCT_W = PRODUCT_H * 0.52;
+// Heebo is served via Google Fonts on web; native uses the system stack,
+// which renders Hebrew cleanly on both platforms
+const FONT = Platform.OS === 'web' ? 'Heebo, -apple-system, sans-serif' : undefined;
 
-// ---------- Product illustrations ----------
+const PRODUCT_H = Math.min(height * 0.46, 420);
+const PRODUCT_W = PRODUCT_H / 2; // bottle viewBox is 120x240
 
-function KetchupBottle() {
-  return (
-    <Svg width={PRODUCT_W} height={PRODUCT_H} viewBox="0 0 100 190">
-      {/* Cap */}
-      <Rect x="36" y="2" width="28" height="14" rx="3" fill="#B71C1C" />
-      <Rect x="38" y="16" width="24" height="6" fill="#D32F2F" />
-      {/* Neck */}
-      <Path d="M40 22 L60 22 L66 44 L34 44 Z" fill="#E53935" />
-      {/* Body */}
-      <Path
-        d="M34 44 C18 52 14 62 14 78 L14 168 C14 178 22 186 32 186 L68 186 C78 186 86 178 86 168 L86 78 C86 62 82 52 66 44 Z"
-        fill="#E53935"
-        stroke="#C62828"
-        strokeWidth="2"
-      />
-      {/* Highlight */}
-      <Ellipse cx="26" cy="100" rx="6" ry="34" fill="#EF5350" opacity="0.7" />
-    </Svg>
-  );
-}
+// ---------- Theme ----------
 
-function ChocoMilkCarton() {
-  return (
-    <Svg width={PRODUCT_W} height={PRODUCT_H} viewBox="0 0 100 190">
-      {/* Cap on the gable */}
-      <Rect x="43" y="6" width="14" height="12" rx="3" fill="#4E342E" />
-      {/* Gable top */}
-      <Path d="M18 46 L50 16 L82 46 Z" fill="#8D6E63" stroke="#5D4037" strokeWidth="2" />
-      {/* Body */}
-      <Rect
-        x="16"
-        y="44"
-        width="68"
-        height="140"
-        rx="7"
-        fill="#795548"
-        stroke="#5D4037"
-        strokeWidth="2"
-      />
-      {/* Highlight */}
-      <Ellipse cx="28" cy="110" rx="5" ry="40" fill="#A1887F" opacity="0.6" />
-    </Svg>
-  );
-}
+const C = {
+  bgTop: '#211B1E',
+  bgBottom: '#141117',
+  surface: 'rgba(255,255,255,0.05)',
+  surfaceBorder: 'rgba(255,255,255,0.08)',
+  text: '#F5F1EC',
+  muted: 'rgba(245,241,236,0.55)',
+  faint: 'rgba(245,241,236,0.32)',
+  red: '#B3271E',
+  redBright: '#D8402F',
+  gold: '#D9A441',
+  paper: '#FAF6EE',
+  ink: '#2E2A26',
+};
 
-function SnackBag() {
-  return (
-    <Svg width={PRODUCT_W} height={PRODUCT_H} viewBox="0 0 100 190">
-      {/* Top crimp */}
-      <Rect x="8" y="14" width="84" height="12" rx="4" fill="#FB8C00" />
-      {/* Body */}
-      <Rect
-        x="12"
-        y="24"
-        width="76"
-        height="142"
-        rx="12"
-        fill="#FFA726"
-        stroke="#EF6C00"
-        strokeWidth="2"
-      />
-      {/* Bottom crimp */}
-      <Rect x="8" y="164" width="84" height="12" rx="4" fill="#FB8C00" />
-      {/* Highlight */}
-      <Ellipse cx="26" cy="90" rx="6" ry="36" fill="#FFCC80" opacity="0.7" />
-    </Svg>
-  );
-}
+// ---------- Level data ----------
 
-// ---------- Levels (data-driven: add a product = add an entry) ----------
+const SLOT_SIZES = {
+  neck: { w: PRODUCT_W * 0.5, h: 26 },
+  label: { w: PRODUCT_W * 0.56, h: 88 },
+  weight: { w: 84, h: 32 },
+  stamp: { w: 48, h: 48 },
+  barcode: { w: 64, h: 40 },
+};
 
-const LEVELS = [
-  {
-    id: 'ketchup',
-    name: 'קטשופ',
-    emoji: '🍅',
-    colors: ['#FF8A65', '#E53935'],
-    accent: '#C62828',
-    Product: KetchupBottle,
-    slots: [
-      { id: 'pic', label: 'תמונה', top: 0.24, w: 0.42, h: 0.16, shape: 'circle' },
-      { id: 'name', label: 'שם המוצר', top: 0.44, w: 0.78, h: 0.13, shape: 'pill' },
-      { id: 'weight', label: 'משקל', top: 0.61, w: 0.6, h: 0.1, shape: 'pill' },
-      { id: 'origin', label: 'תוצרת', top: 0.75, w: 0.7, h: 0.09, shape: 'pill' },
-    ],
-    stickers: [
-      { id: 's-pic', type: 'emoji', content: '🍅', slot: 'pic' },
-      { id: 's-name', type: 'text', content: 'קטשופ', slot: 'name' },
-      { id: 's-weight', type: 'text', content: '750 גרם', slot: 'weight' },
-      { id: 's-origin', type: 'text', content: 'תוצרת ישראל', slot: 'origin' },
-      { id: 'd-1', type: 'text', content: 'חרדל', slot: null },
-      { id: 'd-2', type: 'emoji', content: '🥒', slot: null },
-      { id: 'd-3', type: 'text', content: '1 ליטר', slot: null },
-    ],
-  },
-  {
-    id: 'choco',
-    name: 'שוקו',
-    emoji: '🍫',
-    colors: ['#A1887F', '#5D4037'],
-    accent: '#4E342E',
-    Product: ChocoMilkCarton,
-    slots: [
-      { id: 'pic', label: 'תמונה', top: 0.31, w: 0.4, h: 0.15, shape: 'circle' },
-      { id: 'name', label: 'שם המוצר', top: 0.5, w: 0.56, h: 0.12, shape: 'pill' },
-      { id: 'volume', label: 'נפח', top: 0.65, w: 0.5, h: 0.1, shape: 'pill' },
-      { id: 'kind', label: 'סוג', top: 0.78, w: 0.56, h: 0.09, shape: 'pill' },
-    ],
-    stickers: [
-      { id: 's-pic', type: 'emoji', content: '🍫', slot: 'pic' },
-      { id: 's-name', type: 'text', content: 'שוקו', slot: 'name' },
-      { id: 's-volume', type: 'text', content: '1 ליטר', slot: 'volume' },
-      { id: 's-kind', type: 'text', content: 'מוצר חלב', slot: 'kind' },
-      { id: 'd-1', type: 'text', content: 'קפה', slot: null },
-      { id: 'd-2', type: 'emoji', content: '🍅', slot: null },
-      { id: 'd-3', type: 'text', content: '750 גרם', slot: null },
-    ],
-  },
-  {
-    id: 'bamba',
-    name: 'במבה',
-    emoji: '🥜',
-    colors: ['#FFB74D', '#F57C00'],
-    accent: '#E65100',
-    Product: SnackBag,
-    slots: [
-      { id: 'pic', label: 'תמונה', top: 0.22, w: 0.45, h: 0.17, shape: 'circle' },
-      { id: 'name', label: 'שם המוצר', top: 0.43, w: 0.62, h: 0.13, shape: 'pill' },
-      { id: 'weight', label: 'משקל', top: 0.6, w: 0.55, h: 0.1, shape: 'pill' },
-      { id: 'kind', label: 'סוג', top: 0.74, w: 0.6, h: 0.09, shape: 'pill' },
-    ],
-    stickers: [
-      { id: 's-pic', type: 'emoji', content: '🥜', slot: 'pic' },
-      { id: 's-name', type: 'text', content: 'במבה', slot: 'name' },
-      { id: 's-weight', type: 'text', content: '80 גרם', slot: 'weight' },
-      { id: 's-kind', type: 'text', content: 'חטיף אפוי', slot: 'kind' },
-      { id: 'd-1', type: 'text', content: 'שוקולד', slot: null },
-      { id: 'd-2', type: 'emoji', content: '🧀', slot: null },
-      { id: 'd-3', type: 'text', content: '1 ק"ג', slot: null },
-    ],
-  },
+const SLOTS = [
+  { id: 'neck', kind: 'neck', hint: 'סרט צוואר', top: 0.355 },
+  { id: 'label', kind: 'label', hint: 'תווית ראשית', top: 0.44 },
+  { id: 'weight', kind: 'weight', hint: 'משקל נטו', top: 0.705 },
+  { id: 'stamp', kind: 'stamp', hint: 'חותמת', top: 0.8, left: 0.21 },
+  { id: 'barcode', kind: 'barcode', hint: 'ברקוד', top: 0.81, left: 0.47 },
 ];
+
+const STICKERS = [
+  { id: 's-neck', kind: 'neck', variant: 'ketchup', slot: 'neck' },
+  { id: 's-label', kind: 'label', variant: 'ketchup', slot: 'label' },
+  { id: 's-weight', kind: 'weight', variant: 'g750', slot: 'weight' },
+  { id: 's-stamp', kind: 'stamp', variant: 'kosher', slot: 'stamp' },
+  { id: 's-barcode', kind: 'barcode', variant: 'real', slot: 'barcode' },
+  { id: 'd-neck', kind: 'neck', variant: 'mustard', slot: null },
+  { id: 'd-weight', kind: 'weight', variant: 'liter', slot: null },
+  { id: 'd-stamp', kind: 'stamp', variant: 'organic', slot: null },
+];
+
+const CORRECT_COUNT = STICKERS.filter((s) => s.slot).length;
 
 function shuffle(arr) {
   const a = [...arr];
@@ -174,8 +90,153 @@ function shuffle(arr) {
   return a;
 }
 
-// Forgiving hit margin around slots so kids don't need pixel precision
-const HIT_MARGIN = 14;
+// ---------- Label piece renderers (shared by tray and bottle) ----------
+
+function NeckBand({ variant }) {
+  const mustard = variant === 'mustard';
+  return (
+    <View
+      style={[
+        pieces.neck,
+        { backgroundColor: mustard ? C.gold : C.red },
+      ]}
+    >
+      <Text style={[pieces.neckText, mustard && { color: '#42340F' }]}>
+        {mustard ? 'חרדל' : 'מתכון מקורי'}
+      </Text>
+    </View>
+  );
+}
+
+function MainLabel() {
+  return (
+    <View style={pieces.label}>
+      <View style={pieces.labelRule} />
+      <Text style={pieces.labelTitle}>קטשופ</Text>
+      <Text style={pieces.labelSub}>רסק עגבניות טבעי</Text>
+      <View style={pieces.labelRule} />
+    </View>
+  );
+}
+
+function WeightPill({ variant }) {
+  return (
+    <View style={pieces.pill}>
+      <Text style={pieces.pillText}>{variant === 'liter' ? '1 ליטר' : '750 גרם'}</Text>
+    </View>
+  );
+}
+
+function Stamp({ variant }) {
+  const organic = variant === 'organic';
+  return (
+    <View style={[pieces.stamp, organic && { borderColor: '#4E7A4E' }]}>
+      <Text style={[pieces.stampText, organic && { color: '#4E7A4E' }]}>
+        {organic ? 'אורגני' : 'כשר'}
+      </Text>
+      {!organic && <Text style={pieces.stampSub}>למהדרין</Text>}
+    </View>
+  );
+}
+
+const BARCODE_BARS = [2, 1, 3, 1, 2, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 2];
+
+function Barcode() {
+  return (
+    <View style={pieces.barcode}>
+      <View style={pieces.barcodeRow}>
+        {BARCODE_BARS.map((w, i) => (
+          <View key={i} style={{ width: w, backgroundColor: '#191713', alignSelf: 'stretch', marginRight: 1.5 }} />
+        ))}
+      </View>
+      <Text style={pieces.barcodeText}>7 290000 528113</Text>
+    </View>
+  );
+}
+
+function PieceContent({ sticker }) {
+  switch (sticker.kind) {
+    case 'neck':
+      return <NeckBand variant={sticker.variant} />;
+    case 'label':
+      return <MainLabel />;
+    case 'weight':
+      return <WeightPill variant={sticker.variant} />;
+    case 'stamp':
+      return <Stamp variant={sticker.variant} />;
+    case 'barcode':
+      return <Barcode />;
+    default:
+      return null;
+  }
+}
+
+// ---------- Bottle illustration ----------
+
+function KetchupBottle() {
+  return (
+    <Svg width={PRODUCT_W} height={PRODUCT_H} viewBox="0 0 120 240">
+      <Defs>
+        <SvgGradient id="body" x1="0" y1="0" x2="1" y2="0">
+          <Stop offset="0" stopColor="#8E1F17" />
+          <Stop offset="0.35" stopColor="#B3271E" />
+          <Stop offset="0.7" stopColor="#C23425" />
+          <Stop offset="1" stopColor="#7C1A13" />
+        </SvgGradient>
+        <SvgGradient id="cap" x1="0" y1="0" x2="1" y2="0">
+          <Stop offset="0" stopColor="#5E120D" />
+          <Stop offset="0.5" stopColor="#8A1E16" />
+          <Stop offset="1" stopColor="#4F0F0B" />
+        </SvgGradient>
+        <RadialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+          <Stop offset="0" stopColor="#D8402F" stopOpacity="0.16" />
+          <Stop offset="1" stopColor="#D8402F" stopOpacity="0" />
+        </RadialGradient>
+      </Defs>
+
+      {/* Ambient glow behind the bottle */}
+      <Ellipse cx="60" cy="130" rx="60" ry="110" fill="url(#glow)" />
+      {/* Floor shadow */}
+      <Ellipse cx="60" cy="234" rx="42" ry="5" fill="#000" opacity="0.4" />
+
+      {/* Cap */}
+      <Rect x="44" y="4" width="32" height="26" rx="4" fill="url(#cap)" />
+      {[49, 55, 61, 67].map((x) => (
+        <Line key={x} x1={x} y1="7" x2={x} y2="27" stroke="#FFF" strokeOpacity="0.08" strokeWidth="2" />
+      ))}
+      {/* Collar seal */}
+      <Rect x="46" y="30" width="28" height="7" rx="2" fill="#6B150F" />
+
+      {/* Body with shoulders */}
+      <Path
+        d="M48 37 C48 55 26 61 24 86 L24 214 C24 225 32 232 42 232 L78 232 C88 232 96 225 96 214 L96 86 C94 61 72 55 72 37 Z"
+        fill="url(#body)"
+      />
+      {/* Left highlight */}
+      <Path
+        d="M33 94 C29 132 29 172 33 206"
+        stroke="#FFF"
+        strokeOpacity="0.12"
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Right edge shade */}
+      <Path
+        d="M90 92 C93 132 93 174 90 210"
+        stroke="#000"
+        strokeOpacity="0.18"
+        strokeWidth="5"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </Svg>
+  );
+}
+
+// ---------- Drag & drop ----------
+
+const HIT_MARGIN = 16;
 
 function hitTest(rects, x, y) {
   return rects.find(
@@ -187,9 +248,7 @@ function hitTest(rects, x, y) {
   );
 }
 
-// ---------- Draggable sticker in the tray ----------
-
-function DraggableSticker({ sticker, onDrop, onDragStart, onDragMove, disabled, accent }) {
+function DraggableSticker({ sticker, onDrop, onDragStart, onDragMove, disabled }) {
   const pan = useRef(new Animated.ValueXY()).current;
   const scale = useRef(new Animated.Value(1)).current;
   const shakeX = useRef(new Animated.Value(0)).current;
@@ -208,10 +267,10 @@ function DraggableSticker({ sticker, onDrop, onDragStart, onDragMove, disabled, 
 
   const shake = useCallback(() => {
     Animated.sequence([
-      Animated.timing(shakeX, { toValue: 8, duration: 50, useNativeDriver: true }),
-      Animated.timing(shakeX, { toValue: -8, duration: 50, useNativeDriver: true }),
-      Animated.timing(shakeX, { toValue: 5, duration: 50, useNativeDriver: true }),
-      Animated.timing(shakeX, { toValue: 0, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeX, { toValue: 7, duration: 45, useNativeDriver: true }),
+      Animated.timing(shakeX, { toValue: -7, duration: 45, useNativeDriver: true }),
+      Animated.timing(shakeX, { toValue: 4, duration: 45, useNativeDriver: true }),
+      Animated.timing(shakeX, { toValue: 0, duration: 45, useNativeDriver: true }),
     ]).start();
   }, [shakeX]);
 
@@ -234,7 +293,7 @@ function DraggableSticker({ sticker, onDrop, onDragStart, onDragMove, disabled, 
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         }
         onDragStartRef.current();
-        Animated.spring(scale, { toValue: 1.15, useNativeDriver: true }).start();
+        Animated.spring(scale, { toValue: 1.08, useNativeDriver: true }).start();
       },
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], {
         useNativeDriver: false,
@@ -274,95 +333,50 @@ function DraggableSticker({ sticker, onDrop, onDragStart, onDragMove, disabled, 
         },
       ]}
     >
-      {sticker.type === 'emoji' ? (
-        <View style={styles.emojiSticker}>
-          <Text style={styles.emojiText}>{sticker.content}</Text>
-        </View>
-      ) : (
-        <View style={styles.textSticker}>
-          <Text style={[styles.textStickerLabel, { color: accent }]}>{sticker.content}</Text>
-        </View>
-      )}
+      <PieceContent sticker={sticker} />
     </Animated.View>
   );
 }
 
-// Content rendered inside a filled slot
-function PlacedSticker({ sticker, accent }) {
-  const pop = useRef(new Animated.Value(0.3)).current;
+function PlacedSticker({ sticker }) {
+  const pop = useRef(new Animated.Value(0.5)).current;
   useEffect(() => {
-    Animated.spring(pop, { toValue: 1, friction: 4, useNativeDriver: true }).start();
+    Animated.spring(pop, { toValue: 1, friction: 5, useNativeDriver: true }).start();
   }, [pop]);
   return (
     <Animated.View style={{ transform: [{ scale: pop }] }}>
-      {sticker.type === 'emoji' ? (
-        <Text style={styles.placedEmoji}>{sticker.content}</Text>
-      ) : (
-        <Text style={[styles.placedText, { color: accent }]}>{sticker.content}</Text>
-      )}
+      <PieceContent sticker={sticker} />
     </Animated.View>
-  );
-}
-
-// Falling confetti piece for the win screen
-function ConfettiPiece({ delay, startX, emoji }) {
-  const fall = useRef(new Animated.Value(-60)).current;
-  const spin = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fall, {
-        toValue: height + 60,
-        duration: 2600 + Math.random() * 1500,
-        delay,
-        useNativeDriver: true,
-      }),
-      Animated.loop(
-        Animated.timing(spin, { toValue: 1, duration: 900, useNativeDriver: true })
-      ),
-    ]).start();
-  }, [fall, spin, delay]);
-  return (
-    <Animated.Text
-      style={{
-        position: 'absolute',
-        left: startX,
-        fontSize: 26,
-        transform: [
-          { translateY: fall },
-          {
-            rotate: spin.interpolate({
-              inputRange: [0, 1],
-              outputRange: ['0deg', '360deg'],
-            }),
-          },
-        ],
-      }}
-    >
-      {emoji}
-    </Animated.Text>
   );
 }
 
 // ---------- Main game ----------
 
-export default function StickerGame({ onBack }) {
-  const [levelIndex, setLevelIndex] = useState(0);
-  const level = LEVELS[levelIndex];
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec < 10 ? '0' : ''}${sec}`;
+}
 
-  const [tray, setTray] = useState(() => shuffle(LEVELS[0].stickers));
-  const [placed, setPlaced] = useState({}); // slotId -> sticker
-  const placedRef = useRef({}); // latest placed map, readable from drop handler
+export default function StickerGame({ onBack }) {
+  const [tray, setTray] = useState(() => shuffle(STICKERS));
+  const [placed, setPlaced] = useState({});
+  const placedRef = useRef({});
   const [mistakes, setMistakes] = useState(0);
   const [flashSlot, setFlashSlot] = useState(null);
   const [hoverSlot, setHoverSlot] = useState(null);
   const [done, setDone] = useState(false);
-  const [earnedStars, setEarnedStars] = useState([]); // stars per completed level
+  const [seconds, setSeconds] = useState(0);
   const slotRefs = useRef({});
-  const dragRects = useRef([]); // cached open-slot rects during a drag
+  const dragRects = useRef([]);
 
   const filledCount = Object.keys(placed).length;
-  const stars = mistakes <= 1 ? 3 : mistakes <= 3 ? 2 : 1;
-  const isLastLevel = levelIndex === LEVELS.length - 1;
+
+  useEffect(() => {
+    if (done) return;
+    const t = setInterval(() => setSeconds((s) => s + 1), 1000);
+    return () => clearInterval(t);
+  }, [done]);
 
   const measureSlot = (id) =>
     new Promise((resolve) => {
@@ -372,15 +386,9 @@ export default function StickerGame({ onBack }) {
     });
 
   const measureOpenSlots = useCallback(async () => {
-    const open = LEVELS[levelIndexRef.current].slots.filter(
-      (s) => !placedRef.current[s.id]
-    );
+    const open = SLOTS.filter((s) => !placedRef.current[s.id]);
     return (await Promise.all(open.map((s) => measureSlot(s.id)))).filter(Boolean);
   }, []);
-
-  // level index readable from stable callbacks
-  const levelIndexRef = useRef(0);
-  levelIndexRef.current = levelIndex;
 
   const handleDragStart = useCallback(async () => {
     dragRects.current = await measureOpenSlots();
@@ -407,10 +415,8 @@ export default function StickerGame({ onBack }) {
         placedRef.current = nextPlaced;
         setPlaced(nextPlaced);
         setTray((t) => t.filter((s) => s.id !== sticker.id));
-        if (
-          Object.keys(nextPlaced).length === LEVELS[levelIndexRef.current].slots.length
-        ) {
-          setTimeout(() => setDone(true), 600);
+        if (Object.keys(nextPlaced).length === CORRECT_COUNT) {
+          setTimeout(() => setDone(true), 500);
         }
         return 'placed';
       }
@@ -420,87 +426,63 @@ export default function StickerGame({ onBack }) {
       }
       setMistakes((m) => m + 1);
       setFlashSlot(hit.id);
-      setTimeout(() => setFlashSlot(null), 500);
+      setTimeout(() => setFlashSlot(null), 450);
       return 'wrong';
     },
     [measureOpenSlots]
   );
 
-  const startLevel = (index) => {
+  const restart = () => {
     slotRefs.current = {};
     placedRef.current = {};
-    setLevelIndex(index);
-    setTray(shuffle(LEVELS[index].stickers));
+    setTray(shuffle(STICKERS));
     setPlaced({});
     setMistakes(0);
     setHoverSlot(null);
+    setSeconds(0);
     setDone(false);
   };
 
-  const nextLevel = () => {
-    setEarnedStars((e) => [...e, stars]);
-    startLevel(levelIndex + 1);
-  };
-
-  const restartAll = () => {
-    setEarnedStars([]);
-    startLevel(0);
-  };
-
-  const totalStars = earnedStars.reduce((a, b) => a + b, 0) + (done ? stars : 0);
-  const ProductArt = level.Product;
+  const accuracy = Math.round((CORRECT_COUNT / (CORRECT_COUNT + mistakes)) * 100);
+  const stars = mistakes === 0 ? 3 : mistakes <= 2 ? 2 : 1;
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <LinearGradient
-        colors={level.colors}
-        style={styles.background}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      >
+      <LinearGradient colors={[C.bgTop, C.bgBottom]} style={styles.background}>
         <SafeAreaView style={styles.safeArea}>
-          <View style={styles.header}>
+          {/* HUD */}
+          <View style={styles.hud}>
             {onBack ? (
               <TouchableOpacity style={styles.backButton} onPress={onBack}>
-                <Text style={styles.backText}>→ חזרה</Text>
+                <Text style={styles.backText}>חזרה</Text>
               </TouchableOpacity>
             ) : (
               <View style={styles.backButton} />
             )}
-            <View style={styles.headerCenter}>
-              <Text style={styles.title}>🏷️ משחק המדבקות</Text>
-              <Text style={styles.subtitle}>השלימו את המדבקות על ה{level.name}!</Text>
+            <View style={styles.hudCenter}>
+              <Text style={styles.kicker}>משחק המדבקות</Text>
+              <Text style={styles.productName}>קטשופ</Text>
             </View>
-            <View style={styles.progressBadge}>
-              <Text style={styles.progressText}>
-                {filledCount}/{level.slots.length}
+            <View style={styles.hudRight}>
+              <Text style={styles.timer}>{formatTime(seconds)}</Text>
+              <Text style={styles.progress}>
+                {filledCount}/{CORRECT_COUNT}
               </Text>
             </View>
           </View>
 
-          {/* Level dots */}
-          <View style={styles.levelDots}>
-            {LEVELS.map((l, i) => (
-              <Text
-                key={l.id}
-                style={[styles.levelDot, i === levelIndex && styles.levelDotActive]}
-              >
-                {i < levelIndex || (i === levelIndex && done) ? l.emoji : '•'}
-              </Text>
-            ))}
-          </View>
-
-          {/* Product area */}
+          {/* Product */}
           <View style={styles.productArea}>
-            <View key={level.id} style={{ width: PRODUCT_W, height: PRODUCT_H }}>
-              <ProductArt />
-              {level.slots.map((slot) => {
+            <View style={{ width: PRODUCT_W, height: PRODUCT_H }}>
+              <KetchupBottle />
+              {SLOTS.map((slot) => {
+                const size = SLOT_SIZES[slot.kind];
                 const filled = placed[slot.id];
                 const isFlash = flashSlot === slot.id;
                 const isHover = hoverSlot === slot.id && !filled;
-                const slotW = PRODUCT_W * slot.w;
-                const slotH = PRODUCT_H * slot.h;
+                const left =
+                  slot.left != null ? PRODUCT_W * slot.left : (PRODUCT_W - size.w) / 2;
                 return (
                   <View
                     key={slot.id}
@@ -509,10 +491,10 @@ export default function StickerGame({ onBack }) {
                       styles.slot,
                       {
                         top: PRODUCT_H * slot.top,
-                        left: (PRODUCT_W - slotW) / 2,
-                        width: slotW,
-                        height: slotH,
-                        borderRadius: slot.shape === 'circle' ? slotH / 2 : 12,
+                        left,
+                        width: size.w,
+                        height: size.h,
+                        borderRadius: slot.kind === 'stamp' ? size.h / 2 : 8,
                       },
                       isHover && styles.slotHover,
                       filled && styles.slotFilled,
@@ -520,9 +502,9 @@ export default function StickerGame({ onBack }) {
                     ]}
                   >
                     {filled ? (
-                      <PlacedSticker sticker={filled} accent={level.accent} />
+                      <PlacedSticker sticker={filled} />
                     ) : (
-                      <Text style={styles.slotHint}>{slot.label}</Text>
+                      <Text style={styles.slotHint}>{slot.hint}</Text>
                     )}
                   </View>
                 );
@@ -530,65 +512,56 @@ export default function StickerGame({ onBack }) {
             </View>
           </View>
 
-          {/* Sticker tray */}
+          {/* Tray */}
           <View style={styles.tray}>
-            <Text style={styles.trayTitle}>גררו מדבקה למקום הנכון 👇</Text>
+            <Text style={styles.trayTitle}>גררו כל רכיב למקומו על הבקבוק</Text>
             <View style={styles.trayRow}>
               {tray.map((sticker) => (
                 <DraggableSticker
-                  key={`${level.id}-${sticker.id}`}
+                  key={sticker.id}
                   sticker={sticker}
                   onDrop={handleDrop}
                   onDragStart={handleDragStart}
                   onDragMove={handleDragMove}
                   disabled={done}
-                  accent={level.accent}
                 />
               ))}
             </View>
           </View>
         </SafeAreaView>
 
-        {/* Win overlay */}
+        {/* Completion overlay */}
         {done && (
           <View style={styles.winOverlay}>
-            {Array.from({ length: 18 }).map((_, i) => (
-              <ConfettiPiece
-                key={`${level.id}-${i}`}
-                delay={i * 120}
-                startX={(width / 18) * i}
-                emoji={['🎉', '⭐', level.emoji, '✨'][i % 4]}
-              />
-            ))}
             <View style={styles.winCard}>
-              <Text style={styles.winEmoji}>{isLastLevel ? '🏆' : '🎉'}</Text>
-              <Text style={[styles.winTitle, { color: level.accent }]}>
-                {isLastLevel ? 'אלופים!' : 'כל הכבוד!'}
-              </Text>
-              <Text style={styles.winSub}>
-                {isLastLevel
-                  ? `סיימתם את כל המוצרים עם ${totalStars} כוכבים!`
-                  : `השלמתם את כל המדבקות על ה${level.name}!`}
-              </Text>
+              <Text style={styles.winKicker}>קטשופ</Text>
+              <Text style={styles.winTitle}>התווית הושלמה</Text>
               <Text style={styles.winStars}>
-                {'⭐'.repeat(stars)}
-                {'☆'.repeat(3 - stars)}
+                <Text style={{ color: C.gold }}>{'★'.repeat(stars)}</Text>
+                <Text style={{ color: 'rgba(217,164,65,0.25)' }}>{'★'.repeat(3 - stars)}</Text>
               </Text>
-              {isLastLevel ? (
-                <TouchableOpacity
-                  style={[styles.winButton, { backgroundColor: level.accent }]}
-                  onPress={restartAll}
-                >
-                  <Text style={styles.winButtonText}>שחקו שוב מההתחלה 🔄</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={[styles.winButton, { backgroundColor: level.accent }]}
-                  onPress={nextLevel}
-                >
-                  <Text style={styles.winButtonText}>
-                    למוצר הבא {LEVELS[levelIndex + 1].emoji}
-                  </Text>
+              <View style={styles.statsRow}>
+                <View style={styles.stat}>
+                  <Text style={styles.statValue}>{formatTime(seconds)}</Text>
+                  <Text style={styles.statLabel}>זמן</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.stat}>
+                  <Text style={styles.statValue}>{mistakes}</Text>
+                  <Text style={styles.statLabel}>טעויות</Text>
+                </View>
+                <View style={styles.statDivider} />
+                <View style={styles.stat}>
+                  <Text style={styles.statValue}>{accuracy}%</Text>
+                  <Text style={styles.statLabel}>דיוק</Text>
+                </View>
+              </View>
+              <TouchableOpacity style={styles.primaryButton} onPress={restart}>
+                <Text style={styles.primaryButtonText}>משחק חדש</Text>
+              </TouchableOpacity>
+              {onBack && (
+                <TouchableOpacity style={styles.ghostButton} onPress={onBack}>
+                  <Text style={styles.ghostButtonText}>חזרה לתפריט</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -599,6 +572,115 @@ export default function StickerGame({ onBack }) {
   );
 }
 
+// ---------- Label piece styles ----------
+
+const pieces = StyleSheet.create({
+  neck: {
+    width: SLOT_SIZES.neck.w,
+    height: SLOT_SIZES.neck.h,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  neckText: {
+    fontFamily: FONT,
+    color: C.paper,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1,
+  },
+  label: {
+    width: SLOT_SIZES.label.w,
+    height: SLOT_SIZES.label.h,
+    backgroundColor: C.paper,
+    borderRadius: 10,
+    borderWidth: 2.5,
+    borderColor: C.red,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+  },
+  labelRule: {
+    width: '55%',
+    height: 1.5,
+    backgroundColor: C.red,
+    opacity: 0.55,
+  },
+  labelTitle: {
+    fontFamily: FONT,
+    fontSize: 27,
+    fontWeight: '900',
+    color: C.red,
+    marginVertical: 2,
+  },
+  labelSub: {
+    fontFamily: FONT,
+    fontSize: 10,
+    fontWeight: '500',
+    color: '#5A544C',
+    marginBottom: 4,
+  },
+  pill: {
+    width: SLOT_SIZES.weight.w,
+    height: SLOT_SIZES.weight.h,
+    backgroundColor: C.paper,
+    borderRadius: SLOT_SIZES.weight.h / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pillText: {
+    fontFamily: FONT,
+    fontSize: 14,
+    fontWeight: '700',
+    color: C.ink,
+  },
+  stamp: {
+    width: SLOT_SIZES.stamp.w,
+    height: SLOT_SIZES.stamp.h,
+    borderRadius: SLOT_SIZES.stamp.w / 2,
+    backgroundColor: C.paper,
+    borderWidth: 2,
+    borderColor: C.ink,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stampText: {
+    fontFamily: FONT,
+    fontSize: 13,
+    fontWeight: '900',
+    color: C.ink,
+  },
+  stampSub: {
+    fontFamily: FONT,
+    fontSize: 6.5,
+    fontWeight: '500',
+    color: C.ink,
+    marginTop: -1,
+  },
+  barcode: {
+    width: SLOT_SIZES.barcode.w,
+    height: SLOT_SIZES.barcode.h,
+    backgroundColor: C.paper,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+  },
+  barcodeRow: {
+    flexDirection: 'row',
+    height: 20,
+  },
+  barcodeText: {
+    fontFamily: FONT,
+    fontSize: 6,
+    color: '#191713',
+    marginTop: 2,
+    letterSpacing: 0.5,
+  },
+});
+
+// ---------- Screen styles ----------
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -606,45 +688,56 @@ const styles = StyleSheet.create({
   },
   background: { flex: 1 },
   safeArea: { flex: 1 },
-  header: {
+  hud: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingHorizontal: 18,
+    paddingTop: 14,
   },
-  backButton: { width: 70 },
-  backText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
-  headerCenter: { alignItems: 'center', flex: 1 },
-  title: { fontSize: 24, fontWeight: 'bold', color: 'white' },
-  subtitle: { fontSize: 14, color: 'rgba(255,255,255,0.9)', marginTop: 2 },
-  progressBadge: {
-    width: 70,
+  backButton: {
+    width: 64,
+    paddingVertical: 6,
+  },
+  backText: {
+    fontFamily: FONT,
+    color: C.muted,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  hudCenter: { alignItems: 'center', flex: 1 },
+  kicker: {
+    fontFamily: FONT,
+    color: C.faint,
+    fontSize: 11,
+    fontWeight: '500',
+    letterSpacing: 3,
+  },
+  productName: {
+    fontFamily: FONT,
+    color: C.text,
+    fontSize: 24,
+    fontWeight: '900',
+    marginTop: 1,
+  },
+  hudRight: {
+    width: 64,
     alignItems: 'flex-end',
   },
-  progressText: {
-    backgroundColor: 'rgba(255,255,255,0.25)',
-    color: 'white',
-    fontWeight: 'bold',
+  timer: {
+    fontFamily: FONT,
+    color: C.text,
     fontSize: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 14,
-    overflow: 'hidden',
+    fontWeight: '700',
+    fontVariant: ['tabular-nums'],
   },
-  levelDots: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 6,
-  },
-  levelDot: {
-    fontSize: 18,
-    color: 'rgba(255,255,255,0.6)',
-    marginHorizontal: 6,
-  },
-  levelDotActive: {
-    color: 'white',
-    fontWeight: 'bold',
+  progress: {
+    fontFamily: FONT,
+    color: C.muted,
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 2,
+    fontVariant: ['tabular-nums'],
   },
   productArea: {
     flex: 1,
@@ -653,114 +746,156 @@ const styles = StyleSheet.create({
   },
   slot: {
     position: 'absolute',
-    borderWidth: 2,
+    borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: 'rgba(255,255,255,0.9)',
-    backgroundColor: 'rgba(255,255,255,0.25)',
+    borderColor: 'rgba(255,255,255,0.45)',
+    backgroundColor: 'rgba(0,0,0,0.18)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   slotHover: {
-    borderColor: '#FFF59D',
-    backgroundColor: 'rgba(255,255,255,0.55)',
-    transform: [{ scale: 1.06 }],
+    borderColor: C.gold,
+    backgroundColor: 'rgba(217,164,65,0.14)',
   },
   slotFilled: {
-    borderStyle: 'solid',
-    borderColor: '#FFF',
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    borderWidth: 0,
+    backgroundColor: 'transparent',
   },
   slotWrong: {
-    borderColor: '#FFEB3B',
-    backgroundColor: 'rgba(255,235,59,0.4)',
+    borderColor: C.redBright,
+    backgroundColor: 'rgba(216,64,47,0.2)',
   },
   slotHint: {
-    color: 'rgba(255,255,255,0.95)',
-    fontSize: 12,
-    fontWeight: '600',
+    fontFamily: FONT,
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 11,
+    fontWeight: '500',
   },
-  placedEmoji: { fontSize: 34 },
-  placedText: { fontSize: 16, fontWeight: 'bold' },
   tray: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingTop: 10,
-    paddingBottom: 18,
-    paddingHorizontal: 10,
+    backgroundColor: C.surface,
+    borderTopWidth: 1,
+    borderColor: C.surfaceBorder,
+    paddingTop: 12,
+    paddingBottom: 20,
+    paddingHorizontal: 12,
   },
   trayTitle: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '600',
+    fontFamily: FONT,
+    color: C.muted,
+    fontSize: 13,
+    fontWeight: '500',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   trayRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   stickerWrap: {
-    margin: 6,
+    margin: 5,
     zIndex: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    elevation: 5,
     ...(Platform.OS === 'web'
       ? { userSelect: 'none', touchAction: 'none', cursor: 'grab' }
       : null),
   },
   stickerDragging: {
     zIndex: 100,
-    elevation: 10,
+    elevation: 12,
   },
-  emojiSticker: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  emojiText: { fontSize: 32 },
-  textSticker: {
-    backgroundColor: 'white',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  textStickerLabel: { fontSize: 16, fontWeight: 'bold' },
   winOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.45)',
+    backgroundColor: 'rgba(10,8,10,0.72)',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 24,
   },
   winCard: {
-    backgroundColor: 'white',
-    borderRadius: 24,
-    paddingVertical: 28,
+    backgroundColor: '#241F25',
+    borderWidth: 1,
+    borderColor: C.surfaceBorder,
+    borderRadius: 20,
+    paddingVertical: 30,
     paddingHorizontal: 36,
     alignItems: 'center',
-    maxWidth: width * 0.85,
+    width: Math.min(width - 48, 360),
   },
-  winEmoji: { fontSize: 48 },
-  winTitle: { fontSize: 30, fontWeight: 'bold', marginTop: 6 },
-  winSub: { fontSize: 16, color: '#555', marginTop: 6, textAlign: 'center' },
-  winStars: { fontSize: 30, marginTop: 10 },
-  winButton: {
+  winKicker: {
+    fontFamily: FONT,
+    color: C.faint,
+    fontSize: 12,
+    fontWeight: '500',
+    letterSpacing: 3,
+  },
+  winTitle: {
+    fontFamily: FONT,
+    color: C.text,
+    fontSize: 26,
+    fontWeight: '900',
+    marginTop: 4,
+  },
+  winStars: {
+    fontSize: 26,
+    marginTop: 12,
+    letterSpacing: 6,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 18,
-    paddingHorizontal: 28,
-    paddingVertical: 12,
-    borderRadius: 20,
+    alignSelf: 'stretch',
+    justifyContent: 'space-evenly',
   },
-  winButtonText: { color: 'white', fontSize: 18, fontWeight: 'bold' },
+  stat: { alignItems: 'center', minWidth: 64 },
+  statValue: {
+    fontFamily: FONT,
+    color: C.text,
+    fontSize: 20,
+    fontWeight: '700',
+    fontVariant: ['tabular-nums'],
+  },
+  statLabel: {
+    fontFamily: FONT,
+    color: C.muted,
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  statDivider: {
+    width: 1,
+    height: 28,
+    backgroundColor: C.surfaceBorder,
+  },
+  primaryButton: {
+    marginTop: 24,
+    backgroundColor: C.red,
+    borderRadius: 12,
+    paddingVertical: 13,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  primaryButtonText: {
+    fontFamily: FONT,
+    color: C.paper,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  ghostButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  ghostButtonText: {
+    fontFamily: FONT,
+    color: C.muted,
+    fontSize: 14,
+    fontWeight: '500',
+  },
 });
