@@ -18,10 +18,18 @@ import AlphabetLearning from './components/AlphabetLearning';
 import LetterTracing from './components/LetterTracing';
 import WordBuilding from './components/WordBuilding';
 import LetterQuiz from './components/LetterQuiz';
+import StickerGame from './components/StickerGame';
 
 const { width, height } = Dimensions.get('window');
 
 const gameTypes = [
+  {
+    id: 'stickers',
+    title: 'משחק המדבקות',
+    description: 'השלימו את המדבקות על המוצר',
+    icon: '🍅',
+    color: ['#FF8A65', '#E53935'],
+  },
   {
     id: 'learning',
     title: 'Learn ABC',
@@ -53,7 +61,8 @@ const gameTypes = [
 ];
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('home');
+  // Open straight into the sticker game prototype for playtesting
+  const [currentScreen, setCurrentScreen] = useState('stickers');
   const [animatedValues] = useState(
     gameTypes.map(() => new Animated.Value(0))
   );
@@ -115,6 +124,10 @@ export default function App() {
       </Animated.View>
     );
   };
+
+  if (currentScreen === 'stickers') {
+    return <StickerGame onBack={handleBackToHome} />;
+  }
 
   if (currentScreen === 'learning') {
     return <AlphabetLearning onBack={handleBackToHome} />;

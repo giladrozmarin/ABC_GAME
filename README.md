@@ -2,9 +2,22 @@
 
 A beautiful and engaging React Native app designed to help children learn the alphabet through interactive games and activities.
 
+## 🏷️ NEW: משחק המדבקות (Hebrew Sticker Game) — Prototype
+
+The app now opens directly into a new Hebrew sticker game prototype:
+
+- A product (ketchup bottle 🍅) is shown with empty sticker slots: picture, product name, weight, and origin.
+- Below it is a shuffled tray of stickers — the correct ones plus distractors (mustard, cucumber, 1 liter).
+- Drag a sticker to its slot: a correct drop snaps in with a pop animation and success haptic; a wrong drop shakes and springs back.
+- Completing all slots triggers a confetti win screen with a 1–3 star rating based on accuracy, and a replay button.
+
+The prototype is a single level (ketchup) to validate that the core gameplay feels good. Levels are data-driven (`LEVEL` in `components/StickerGame.js`), so adding more products is just adding data. Gameplay is fully client-side (no backend required), so it scales to any number of concurrent users; a backend can be added later for progress sync and leaderboards.
+
 ## 🎮 Game Features
 
-### 4 Exciting Game Modes:
+### 5 Exciting Game Modes:
+
+0. **🏷️ Sticker Game (Hebrew)** - Complete the stickers on a product by dragging them into place
 
 1. **📚 Learn ABC** - Interactive alphabet learning with beautiful cards, emojis, and word associations
 2. **✏️ Letter Tracing** - Trace letters with your finger using SVG paths and touch gestures
