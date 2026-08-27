@@ -4,14 +4,15 @@ A beautiful and engaging React Native app designed to help children learn the al
 
 ## 🏷️ NEW: משחק המדבקות (Hebrew Sticker Game) — Prototype
 
-The app now opens directly into a new Hebrew sticker game prototype:
+The app now opens directly into a new Hebrew sticker game:
 
-- A product (ketchup bottle 🍅) is shown with empty sticker slots: picture, product name, weight, and origin.
-- Below it is a shuffled tray of stickers — the correct ones plus distractors (mustard, cucumber, 1 liter).
-- Drag a sticker to its slot: a correct drop snaps in with a pop animation and success haptic; a wrong drop shakes and springs back.
-- Completing all slots triggers a confetti win screen with a 1–3 star rating based on accuracy, and a replay button.
+- A product is shown with empty sticker slots: picture, product name, weight/volume, and origin/kind.
+- Below it is a shuffled tray of stickers — the correct ones plus distractors.
+- Drag a sticker to its slot: the slot highlights while you hover over it; a correct drop snaps in with a pop animation and success haptic; a wrong drop shakes and springs back.
+- Completing all slots triggers a confetti win screen with a 1–3 star rating based on accuracy.
+- Three products with level progression: קטשופ 🍅 → שוקו 🍫 → במבה 🥜, ending with a total-stars trophy screen.
 
-The prototype is a single level (ketchup) to validate that the core gameplay feels good. Levels are data-driven (`LEVEL` in `components/StickerGame.js`), so adding more products is just adding data. Gameplay is fully client-side (no backend required), so it scales to any number of concurrent users; a backend can be added later for progress sync and leaderboards.
+Levels are data-driven (`LEVELS` in `components/StickerGame.js`) — adding a product is just adding an entry (name, colors, an SVG illustration, slots, and stickers). Gameplay is fully client-side (no backend required), so it scales to any number of concurrent users; a backend can be added later for progress sync and leaderboards.
 
 ## 🎮 Game Features
 
