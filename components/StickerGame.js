@@ -10,19 +10,12 @@ import {
   Animated,
   PanResponder,
   Platform,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import Svg, {
-  Rect,
-  Path,
-  Ellipse,
-  Defs,
-  LinearGradient as SvgGradient,
-  RadialGradient,
-  Stop,
-  Line,
-} from 'react-native-svg';
+import Svg, { Ellipse, Defs, RadialGradient, Stop } from 'react-native-svg';
+import bottleImage from './bottleImage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -175,62 +168,30 @@ function PieceContent({ sticker }) {
 
 function KetchupBottle() {
   return (
-    <Svg width={PRODUCT_W} height={PRODUCT_H} viewBox="0 0 120 240">
-      <Defs>
-        <SvgGradient id="body" x1="0" y1="0" x2="1" y2="0">
-          <Stop offset="0" stopColor="#8E1F17" />
-          <Stop offset="0.35" stopColor="#B3271E" />
-          <Stop offset="0.7" stopColor="#C23425" />
-          <Stop offset="1" stopColor="#7C1A13" />
-        </SvgGradient>
-        <SvgGradient id="cap" x1="0" y1="0" x2="1" y2="0">
-          <Stop offset="0" stopColor="#5E120D" />
-          <Stop offset="0.5" stopColor="#8A1E16" />
-          <Stop offset="1" stopColor="#4F0F0B" />
-        </SvgGradient>
-        <RadialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
-          <Stop offset="0" stopColor="#D8402F" stopOpacity="0.16" />
-          <Stop offset="1" stopColor="#D8402F" stopOpacity="0" />
-        </RadialGradient>
-      </Defs>
-
-      {/* Ambient glow behind the bottle */}
-      <Ellipse cx="60" cy="130" rx="60" ry="110" fill="url(#glow)" />
-      {/* Floor shadow */}
-      <Ellipse cx="60" cy="234" rx="42" ry="5" fill="#000" opacity="0.4" />
-
-      {/* Cap */}
-      <Rect x="44" y="4" width="32" height="26" rx="4" fill="url(#cap)" />
-      {[49, 55, 61, 67].map((x) => (
-        <Line key={x} x1={x} y1="7" x2={x} y2="27" stroke="#FFF" strokeOpacity="0.08" strokeWidth="2" />
-      ))}
-      {/* Collar seal */}
-      <Rect x="46" y="30" width="28" height="7" rx="2" fill="#6B150F" />
-
-      {/* Body with shoulders */}
-      <Path
-        d="M48 37 C48 55 26 61 24 86 L24 214 C24 225 32 232 42 232 L78 232 C88 232 96 225 96 214 L96 86 C94 61 72 55 72 37 Z"
-        fill="url(#body)"
+    <View style={{ width: PRODUCT_W, height: PRODUCT_H }}>
+      {/* Ambient glow + floor shadow behind the 3D render */}
+      <Svg
+        width={PRODUCT_W}
+        height={PRODUCT_H}
+        viewBox="0 0 120 240"
+        style={StyleSheet.absoluteFill}
+      >
+        <Defs>
+          <RadialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+            <Stop offset="0" stopColor="#D8402F" stopOpacity="0.16" />
+            <Stop offset="1" stopColor="#D8402F" stopOpacity="0" />
+          </RadialGradient>
+        </Defs>
+        <Ellipse cx="60" cy="130" rx="60" ry="110" fill="url(#glow)" />
+        <Ellipse cx="60" cy="229" rx="40" ry="5" fill="#000" opacity="0.45" />
+      </Svg>
+      {/* Bottle rendered in Blender (tools/render_bottle.py) */}
+      <Image
+        source={{ uri: bottleImage }}
+        style={{ width: PRODUCT_W, height: PRODUCT_H }}
+        resizeMode="contain"
       />
-      {/* Left highlight */}
-      <Path
-        d="M33 94 C29 132 29 172 33 206"
-        stroke="#FFF"
-        strokeOpacity="0.12"
-        strokeWidth="6"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Right edge shade */}
-      <Path
-        d="M90 92 C93 132 93 174 90 210"
-        stroke="#000"
-        strokeOpacity="0.18"
-        strokeWidth="5"
-        strokeLinecap="round"
-        fill="none"
-      />
-    </Svg>
+    </View>
   );
 }
 
