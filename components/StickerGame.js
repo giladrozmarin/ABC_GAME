@@ -45,20 +45,22 @@ const C = {
 
 // ---------- Level data ----------
 
+// Sized and positioned against the glass-bottle render: label zone (the
+// bottle body) spans roughly 0.46-0.94 of the image height and 0.53 of its width
 const SLOT_SIZES = {
-  neck: { w: PRODUCT_W * 0.5, h: 26 },
-  label: { w: PRODUCT_W * 0.56, h: 88 },
-  weight: { w: 84, h: 32 },
-  stamp: { w: 48, h: 48 },
-  barcode: { w: 64, h: 40 },
+  neck: { w: PRODUCT_W * 0.36, h: 22 },
+  label: { w: PRODUCT_W * 0.48, h: 76 },
+  weight: { w: 78, h: 30 },
+  stamp: { w: 42, h: 42 },
+  barcode: { w: 54, h: 36 },
 };
 
 const SLOTS = [
-  { id: 'neck', kind: 'neck', hint: 'סרט צוואר', top: 0.355 },
-  { id: 'label', kind: 'label', hint: 'תווית ראשית', top: 0.44 },
-  { id: 'weight', kind: 'weight', hint: 'משקל נטו', top: 0.705 },
-  { id: 'stamp', kind: 'stamp', hint: 'חותמת', top: 0.8, left: 0.21 },
-  { id: 'barcode', kind: 'barcode', hint: 'ברקוד', top: 0.81, left: 0.47 },
+  { id: 'neck', kind: 'neck', hint: 'סרט צוואר', top: 0.4 },
+  { id: 'label', kind: 'label', hint: 'תווית ראשית', top: 0.475 },
+  { id: 'weight', kind: 'weight', hint: 'משקל נטו', top: 0.7 },
+  { id: 'stamp', kind: 'stamp', hint: 'חותמת', top: 0.8, left: 0.26 },
+  { id: 'barcode', kind: 'barcode', hint: 'ברקוד', top: 0.805, left: 0.485 },
 ];
 
 const STICKERS = [
@@ -132,7 +134,7 @@ function Stamp({ variant }) {
   );
 }
 
-const BARCODE_BARS = [2, 1, 3, 1, 2, 2, 1, 3, 2, 1, 2, 3, 1, 2, 1, 2];
+const BARCODE_BARS = [2, 1, 3, 1, 2, 2, 1, 3, 2, 1, 2, 3, 1];
 
 function Barcode() {
   return (
@@ -546,9 +548,9 @@ const pieces = StyleSheet.create({
   neckText: {
     fontFamily: FONT,
     color: C.paper,
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: '700',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
   label: {
     width: SLOT_SIZES.label.w,
@@ -569,17 +571,17 @@ const pieces = StyleSheet.create({
   },
   labelTitle: {
     fontFamily: FONT,
-    fontSize: 27,
+    fontSize: 23,
     fontWeight: '900',
     color: C.red,
-    marginVertical: 2,
+    marginVertical: 1,
   },
   labelSub: {
     fontFamily: FONT,
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: '500',
     color: '#5A544C',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   pill: {
     width: SLOT_SIZES.weight.w,
@@ -591,7 +593,7 @@ const pieces = StyleSheet.create({
   },
   pillText: {
     fontFamily: FONT,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
     color: C.ink,
   },
@@ -607,13 +609,13 @@ const pieces = StyleSheet.create({
   },
   stampText: {
     fontFamily: FONT,
-    fontSize: 13,
+    fontSize: 11,
     fontWeight: '900',
     color: C.ink,
   },
   stampSub: {
     fontFamily: FONT,
-    fontSize: 6.5,
+    fontSize: 6,
     fontWeight: '500',
     color: C.ink,
     marginTop: -1,
@@ -629,11 +631,11 @@ const pieces = StyleSheet.create({
   },
   barcodeRow: {
     flexDirection: 'row',
-    height: 20,
+    height: 17,
   },
   barcodeText: {
     fontFamily: FONT,
-    fontSize: 6,
+    fontSize: 5.5,
     color: '#191713',
     marginTop: 2,
     letterSpacing: 0.5,
