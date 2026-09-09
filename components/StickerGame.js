@@ -45,22 +45,23 @@ const C = {
 
 // ---------- Level data ----------
 
-// Sized and positioned against the glass-bottle render: label zone (the
-// bottle body) spans roughly 0.46-0.94 of the image height and 0.53 of its width
+// Sized and positioned against the glass-bottle render: the faceted body
+// (label zone) spans roughly 0.51-0.94 of the image height and 0.52 of its
+// width; the neck band sits on the long shoulder cone above it
 const SLOT_SIZES = {
-  neck: { w: PRODUCT_W * 0.36, h: 22 },
-  label: { w: PRODUCT_W * 0.48, h: 76 },
-  weight: { w: 78, h: 30 },
-  stamp: { w: 42, h: 42 },
-  barcode: { w: 54, h: 36 },
+  neck: { w: PRODUCT_W * 0.34, h: 22 },
+  label: { w: PRODUCT_W * 0.47, h: 68 },
+  weight: { w: 76, h: 30 },
+  stamp: { w: 40, h: 40 },
+  barcode: { w: 52, h: 36 },
 };
 
 const SLOTS = [
-  { id: 'neck', kind: 'neck', hint: 'סרט צוואר', top: 0.4 },
-  { id: 'label', kind: 'label', hint: 'תווית ראשית', top: 0.475 },
-  { id: 'weight', kind: 'weight', hint: 'משקל נטו', top: 0.7 },
-  { id: 'stamp', kind: 'stamp', hint: 'חותמת', top: 0.8, left: 0.26 },
-  { id: 'barcode', kind: 'barcode', hint: 'ברקוד', top: 0.805, left: 0.485 },
+  { id: 'neck', kind: 'neck', hint: 'סרט צוואר', top: 0.39 },
+  { id: 'label', kind: 'label', hint: 'תווית ראשית', top: 0.525 },
+  { id: 'weight', kind: 'weight', hint: 'משקל נטו', top: 0.72 },
+  { id: 'stamp', kind: 'stamp', hint: 'חותמת', top: 0.815, left: 0.26 },
+  { id: 'barcode', kind: 'barcode', hint: 'ברקוד', top: 0.818, left: 0.49 },
 ];
 
 const STICKERS = [
@@ -571,7 +572,7 @@ const pieces = StyleSheet.create({
   },
   labelTitle: {
     fontFamily: FONT,
-    fontSize: 23,
+    fontSize: 21,
     fontWeight: '900',
     color: C.red,
     marginVertical: 1,

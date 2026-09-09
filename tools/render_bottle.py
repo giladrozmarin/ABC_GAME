@@ -7,19 +7,28 @@ OUT = '/tmp/claude-0/-home-user-ABC-GAME/f61e628f-7d95-53be-9ef7-6c7ea1a615fc/sc
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete()
 
-SEG = 96  # radial segments
+SEG = 128  # radial segments
 
 
 def lathe(name, profile, close_top=True, close_bottom=True):
-    """Build a surface of revolution from a list of (radius, z) pairs."""
+    """Surface of revolution from (radius, z, facet) triples.
+
+    facet 0..1 blends the cross-section from a circle toward a subtle
+    octagon (flat-front), like a classic faceted glass bottle body.
+    """
     verts, faces = [], []
     rings = []
-    for r, z in profile:
+    for r, z, f in profile:
         ring = []
         for i in range(SEG):
             a = 2 * math.pi * i / SEG
+            # fold angle into one octagon sector, [-22.5deg, 22.5deg]
+            sector = math.pi / 4
+            a8 = ((a + sector / 2) % sector) - sector / 2
+            r_oct = r / math.cos(a8)
+            rr = r * (1 - f) + r_oct * f
             ring.append(len(verts))
-            verts.append((r * math.cos(a), r * math.sin(a), z))
+            verts.append((rr * math.cos(a), rr * math.sin(a), z))
         rings.append(ring)
     for a, b in zip(rings, rings[1:]):
         for i in range(SEG):
@@ -47,39 +56,41 @@ def lathe(name, profile, close_top=True, close_bottom=True):
     return obj
 
 
-# ---- classic glass ketchup bottle profile (2.4 tall, half-width max 0.6) ----
-# wide faceted-look body, long tapering neck with a bead, white cap
+# ---- classic glass ketchup bottle (2.4 tall) ----
+# faceted body, long concave shoulder cone, short neck with flange, white cap
 glass_profile = [
-    (0.30, 0.02),
-    (0.33, 0.045),
-    (0.34, 0.12),
-    (0.34, 1.18),
-    (0.33, 1.28),
-    (0.28, 1.42),
-    (0.215, 1.56),
-    (0.165, 1.70),
-    (0.142, 1.84),
-    (0.132, 1.98),
-    (0.13, 2.04),
-    (0.145, 2.06),   # neck bead
-    (0.145, 2.10),
-    (0.127, 2.12),
-    (0.127, 2.18),
+    (0.295, 0.02, 0.55),
+    (0.32, 0.05, 0.55),
+    (0.33, 0.14, 0.55),
+    (0.33, 1.05, 0.55),
+    (0.325, 1.14, 0.4),
+    (0.30, 1.26, 0.15),
+    (0.26, 1.40, 0.0),
+    (0.215, 1.54, 0.0),
+    (0.175, 1.68, 0.0),
+    (0.148, 1.82, 0.0),
+    (0.132, 1.94, 0.0),
+    (0.126, 2.04, 0.0),
+    (0.126, 2.08, 0.0),
+    (0.142, 2.095, 0.0),  # flange under the cap
+    (0.142, 2.13, 0.0),
+    (0.124, 2.145, 0.0),
+    (0.124, 2.20, 0.0),
 ]
 glass = lathe('Glass', glass_profile)
 
-# ketchup inside: same silhouette inset, filled up into the neck
-ketchup_profile = [(max(r - 0.028, 0.02), z) for r, z in glass_profile if z <= 2.0]
-ketchup_profile.append((0.095, 2.0))
+# ketchup inside: inset silhouette, filled up into the neck
+ketchup_profile = [(max(r - 0.026, 0.02), z, f) for r, z, f in glass_profile if z <= 2.02]
+ketchup_profile.append((0.09, 2.02, 0.0))
 ketchup = lathe('Ketchup', ketchup_profile)
 
-# white screw cap
+# short white screw cap
 cap_profile = [
-    (0.162, 2.14),
-    (0.17, 2.16),
-    (0.17, 2.36),
-    (0.162, 2.385),
-    (0.10, 2.40),
+    (0.155, 2.16, 0),
+    (0.163, 2.18, 0),
+    (0.163, 2.34, 0),
+    (0.155, 2.36, 0),
+    (0.10, 2.375, 0),
 ]
 cap = lathe('Cap', cap_profile)
 
@@ -101,11 +112,11 @@ def glass_mat(b):
 
 
 def ketchup_mat(b):
-    b.inputs['Base Color'].default_value = (0.40, 0.016, 0.005, 1)
-    b.inputs['Roughness'].default_value = 0.34
+    b.inputs['Base Color'].default_value = (0.46, 0.026, 0.007, 1)
+    b.inputs['Roughness'].default_value = 0.30
     if 'Subsurface Weight' in b.inputs:
-        b.inputs['Subsurface Weight'].default_value = 0.08
-        b.inputs['Subsurface Radius'].default_value = (0.2, 0.04, 0.02)
+        b.inputs['Subsurface Weight'].default_value = 0.1
+        b.inputs['Subsurface Radius'].default_value = (0.25, 0.05, 0.02)
 
 
 def cap_mat(b):
@@ -122,7 +133,7 @@ bpy.ops.mesh.primitive_plane_add(size=12, location=(0, 0, 0))
 floor = bpy.context.object
 floor.is_shadow_catcher = True
 
-# ---- camera (orthographic front view) ----
+# ---- camera (orthographic front view, facing an octagon flat) ----
 cam_data = bpy.data.cameras.new('Cam')
 cam_data.type = 'ORTHO'
 cam_data.ortho_scale = 2.56
@@ -146,11 +157,10 @@ def area(name, loc, rot, energy, size, color=(1, 1, 1)):
     return o
 
 
-area('Key', (-3.2, -4.2, 3.4), (math.radians(55), 0, math.radians(-38)), 650, 3.0, (1.0, 0.96, 0.9))
-area('Fill', (3.4, -4.0, 1.6), (math.radians(72), 0, math.radians(42)), 150, 5.0, (0.9, 0.94, 1.0))
+area('Key', (-3.2, -4.2, 3.4), (math.radians(55), 0, math.radians(-38)), 800, 2.4, (1.0, 0.97, 0.92))
+area('Fill', (3.4, -4.0, 1.6), (math.radians(72), 0, math.radians(42)), 200, 5.0, (0.9, 0.94, 1.0))
 area('Rim', (2.6, 3.6, 3.0), (math.radians(-60), 0, math.radians(145)), 1100, 2.0)
-# soft strip behind for glass edges
-area('Back', (0, 4.5, 1.2), (math.radians(-90), 0, 0), 220, 6.0)
+area('Back', (0, 4.5, 1.2), (math.radians(-90), 0, 0), 240, 6.0)
 
 world = bpy.data.worlds.new('W')
 world.use_nodes = True
@@ -170,7 +180,7 @@ sc.render.resolution_x = 560
 sc.render.resolution_y = 1120
 sc.render.image_settings.file_format = 'PNG'
 sc.render.image_settings.color_mode = 'RGBA'
-sc.view_settings.look = 'AgX - High Contrast'
+sc.view_settings.look = 'AgX - Medium High Contrast'
 sc.render.filepath = OUT
 
 bpy.ops.render.render(write_still=True)
