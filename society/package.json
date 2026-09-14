@@ -1,0 +1,36 @@
+{
+  "name": "agent-society",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Recursive, sandboxed multi-agent society: autonomous AI agents with budgets that spawn, trade, ally, compete and build software.",
+  "scripts": {
+    "start": "tsx src/cli.ts run",
+    "dev": "tsx src/cli.ts run",
+    "mock": "SOCIETY_MODE=mock tsx src/cli.ts run",
+    "replay": "tsx src/cli.ts replay",
+    "list": "tsx src/cli.ts list",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "d3": "^7.9.0",
+    "ws": "^8.21.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.5.1",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  },
+  "optionalDependencies": {
+    "@daytonaio/sdk": "^0.211.2",
+    "e2b": "^2.49.1"
+  }
+}
