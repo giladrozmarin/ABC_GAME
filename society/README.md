@@ -166,6 +166,15 @@ society/
   docker/sandbox.Dockerfile  sandbox image (node, python, git, claude-code)
 ```
 
+## Tests (`npm test`)
+* `tests/budget.test.ts` – conservation under spawn/transfer/spend/terminate (incl. randomized fuzz), overdraw rejection, minimum child budget, global cap.
+* `tests/permissions.test.ts` – attenuation (recursive), tool mapping, parent-only termination, max depth / children / total agents, model allow-list.
+* `tests/society.test.ts` – messaging fees & inboxes, alliances (accept/reject/merge/leave), artifact access control, project republishing.
+* `tests/security.test.ts` – per-agent tokens (scoped, distinct, revoked on termination), no provider secrets in sandbox env, config validation, path/shell safety.
+* `tests/gateway.test.ts` – LLM gateway against a fake upstream: auth, master-key forwarding, SSE usage metering into the ledger, 402 on exhaustion.
+* `tests/mcp.test.ts` – real MCP client → orchestrator: tool listing, share/fetch artifacts between sandboxes, spawn with context, attenuation over the wire.
+* `tests/runtime.test.ts` – Claude Code stream parsing with a fake `claude` binary: per-message metering, reconciliation, budget kill, error exits.
+
 ## Notes and limitations
 * `process` + `inherit` is the only combination that was exercised end-to-end in
   the development environment (no Docker daemon / Daytona / E2B credentials were

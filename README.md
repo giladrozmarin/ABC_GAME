@@ -1,3 +1,5 @@
+> **`society/`** contains the recursive multi-agent society prototype (orchestrator, sandboxes, live UI). See [society/README.md](society/README.md).
+
 # 🌟 ABC Interactive Game 🌟
 
 A beautiful and engaging React Native app designed to help children learn the alphabet through interactive games and activities.

@@ -14,12 +14,12 @@ import { startServer } from '../src/server/http.js';
 describe('MCP capability endpoint', () => {
   it('serves tools per authenticated agent; spawn/message/share round-trip through real sandboxes', async () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'society-mcp-'));
-    const port = 4300 + Math.floor(Math.random() * 500);
-    const cfg = loadConfig({ mode: 'mock', sandboxProvider: 'process', agentAuthMode: 'inherit', dataDir: dir, rootAgents: 2, rootBudgetUsd: 5, experimentDurationSec: 120, port, host: '127.0.0.1', publicUrl: `http://127.0.0.1:${port}` } as any);
+        const cfg = loadConfig({ mode: 'mock', sandboxProvider: 'process', agentAuthMode: 'inherit', dataDir: dir, rootAgents: 2, rootBudgetUsd: 5, experimentDurationSec: 120, port: 0, host: '127.0.0.1' } as any);
     const store = new ExperimentStore(path.join(dir, 'exp'));
     const bus = new EventBus(store);
     const orch = new Orchestrator({ cfg, store, bus, provider: new ProcessSandboxProvider(dir), experimentId: 'exp' });
     const server = await startServer({ cfg, store, bus, experimentId: 'exp', orch });
+    const port = (server.address() as any).port as number;
     await orch.start();
     // Freeze the scheduler so the mock runtime doesn't interfere.
     for (const a of orch.society.agents.values()) a.wakeAt = Date.now() + 1e9;
@@ -56,7 +56,8 @@ describe('MCP capability endpoint', () => {
     expect(spawned.isError).toBe(false);
     const childId = JSON.parse(spawned.text).child_id;
     expect(orch.society.remaining('A')).toBeCloseTo(4 - 0); // 5 - 1 child
-    await new Promise((r) => setTimeout(r, 300));
+    for (let i = 0; i < 50 && !orch.sandboxes.get(childId); i++) await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 200));
     expect(fs.existsSync(path.join(orch.sandboxes.get(childId)!.workspace, 'shared', artId, 'lib.js'))).toBe(true);
     const msg = await call(A, 'send_message', { to: childId, content: 'hello child' });
     expect(msg.isError).toBe(false);
