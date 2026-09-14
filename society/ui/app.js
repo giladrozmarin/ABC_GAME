@@ -18,7 +18,7 @@
       switch (e.type) {
         case 'EXPERIMENT_STARTED': st.startedAt = e.ts; st.endsAt = d.endsAt; st.mode = d.mode; st.phase = 'running'; break;
         case 'EXPERIMENT_PHASE': st.phase = d.phase; break;
-        case 'AGENT_CREATED': st.agents.set(d.id, { id: d.id, parentId: d.parentId, depth: d.depth, purpose: d.purpose, model: d.model, permissions: d.permissions, status: 'provisioning', teamId: d.teamId, headline: '', task: '', allocated: d.budgetAllocated, remaining: d.budgetAllocated, spent: 0, fees: 0, in: 0, out: 0, toChildren: 0, runs: 0, children: [], createdAt: e.ts, sandbox: 'starting', lastRun: null, tokens: 0 }); if (d.parentId && st.agents.get(d.parentId)) { const p = st.agents.get(d.parentId); p.children.push(d.id); p.toChildren += d.budgetAllocated; p.remaining -= d.budgetAllocated; } break;
+        case 'AGENT_CREATED': st.agents.set(d.id, { id: d.id, parentId: d.parentId, depth: d.depth, purpose: d.purpose, model: d.model, permissions: d.permissions, status: 'provisioning', teamId: d.teamId, headline: '', task: '', allocated: d.budgetAllocated, remaining: d.budgetAllocated, spent: 0, fees: 0, in: 0, out: 0, toChildren: 0, runs: 0, children: [], createdAt: e.ts, sandbox: 'starting', lastRun: null, tokens: 0 }); if (d.parentId && st.agents.get(d.parentId)) { const p = st.agents.get(d.parentId); p.children.push(d.id); p.toChildren += d.budgetAllocated; p.remaining -= d.budgetAllocated; } if (d.teamId && st.teams.get(d.teamId) && !st.teams.get(d.teamId).members.includes(d.id)) st.teams.get(d.teamId).members.push(d.id); break;
         case 'AGENT_STATUS': if (a) a.status = d.status; break;
         case 'AGENT_ACTIVITY': if (a) a.task = d.detail; break;
         case 'AGENT_HEADLINE': if (a) a.headline = d.headline; break;
