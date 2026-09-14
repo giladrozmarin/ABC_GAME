@@ -45,6 +45,7 @@ aside { border-left:1px solid var(--line); background:var(--panel); display:flex
 .card { background:#0f172a; border:1px solid var(--line); border-radius:8px; padding:10px; margin-bottom:8px }
 .card h3 { margin:0 0 4px; font-size:14px }
 .card .row { display:flex; justify-content:space-between; gap:8px; font-size:12px; padding:2px 0 }
+.card .row .k { flex:0 0 auto } .card .row span:last-child { text-align:left; overflow-wrap:anywhere; max-width:70% }
 .card .row .k { color:var(--muted) }
 .bar { height:6px; background:#1f2937; border-radius:3px; overflow:hidden; margin:4px 0 }
 .bar i { display:block; height:100%; background:linear-gradient(90deg,#34d399,#60a5fa) }

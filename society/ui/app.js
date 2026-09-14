@@ -235,7 +235,7 @@
     el.innerHTML = list.map((p) => { const s = scoreOf(p.id); return `<div class="card ${st.winner === p.id ? 'winner' : ''}"><h3>${s ? `#${s.rank} ` : ''}${esc(p.name)} <span class="badge">v${p.version}</span></h3>
       <div class="muted">by ${(p.memberIds || []).join(', ')}${p.teamId && st.teams.get(p.teamId) ? ` (${esc(st.teams.get(p.teamId).name)})` : ''}</div>
       <p>${esc(p.description)}</p>
-      <div class="row"><span class="k">run</span><span style="text-align:right;max-width:260px">${esc(p.runInstructions)}</span></div>
+      <div class="row"><span class="k">run</span><span><pre style="margin:0">${esc(p.runInstructions)}</pre></span></div>
       ${p.testCommand ? `<div class="row"><span class="k">tests</span><span>${esc(p.testCommand)}</span></div>` : ''}
       ${p.demoUrl ? `<div class="row"><span class="k">demo</span><a href="${esc(p.demoUrl)}" target="_blank">${esc(p.demoUrl)}</a></div>` : ''}
       <div class="row"><span class="k">resources</span><span>${usd((p.resourceUsage || {}).spentUsd)} · ${(p.resourceUsage || {}).agents} agents</span></div>
@@ -255,8 +255,8 @@
   }
   function trees(st) {
     const out = [];
-    const walk = (id, prefix, last) => { const a = st.agents.get(id); out.push(`${prefix}${prefix ? (last ? '└── ' : '├── ') : ''}${id}${a.status === 'terminated' ? ' ✝' : ''}${a.teamId && st.teams.get(a.teamId) ? ` [${st.teams.get(a.teamId).name}]` : ''} ${usd(a.remaining)} — ${(a.headline || a.purpose || '').slice(0, 40)}`); a.children.forEach((c, i) => walk(c, prefix + (prefix ? (last ? '    ' : '│   ') : ''), i === a.children.length - 1)); };
-    for (const r of [...st.agents.values()].filter((a) => !a.parentId)) { walk(r.id, '', true); out.push(''); }
+    const walk = (id, prefix, last, depth) => { const a = st.agents.get(id); out.push(`${prefix}${depth ? (last ? '└── ' : '├── ') : ''}${id}${a.status === 'terminated' ? ' ✝' : ''}${a.teamId && st.teams.get(a.teamId) ? ` [${st.teams.get(a.teamId).name}]` : ''} ${usd(a.remaining)} — ${(a.headline || a.purpose || '').slice(0, 40)}`); a.children.forEach((c, i) => walk(c, prefix + (depth ? (last ? '    ' : '│   ') : ''), i === a.children.length - 1, depth + 1)); };
+    for (const r of [...st.agents.values()].filter((a) => !a.parentId)) { walk(r.id, '', true, 0); out.push(''); }
     return out.join('\n');
   }
   function voterId() { try { let v = localStorage.getItem('voter'); if (!v) { v = 'human_' + Math.random().toString(36).slice(2, 8); localStorage.setItem('voter', v); } return v; } catch { return 'human'; } }
