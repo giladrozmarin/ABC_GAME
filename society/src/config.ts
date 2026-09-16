@@ -58,6 +58,18 @@ export interface SocietyConfig {
 
   judgeWeights: { objective: number; llm: number; peer: number; human: number };
   objective: string;
+
+  /** Hidden collaboration grant: unlocked at grantUnlockSec, claimable once by a team with >= grantMinRoots founding agents. 0 disables. */
+  grantUsd: number;
+  grantMinRoots: number;
+  grantUnlockSec: number;
+  /** Questions each agent may ask the game operator ("the god of the game"). */
+  oracleUses: number;
+  oracleTimeoutSec: number;
+  /** Free assistant window: once activated, children on freeModel cost nothing for freeWindowSec. 0 disables. */
+  freeWindowSec: number;
+  freeModel: string;
+  freeChildMaxRunUsd: number;
 }
 
 const num = (k: string, d: number) => {
@@ -76,6 +88,20 @@ const bool = (k: string, d: boolean) => {
 };
 const list = (k: string, d: string[]) =>
   process.env[k] ? process.env[k]!.split(',').map((s) => s.trim()).filter(Boolean) : d;
+
+export const USEFUL_OBJECTIVE = `Build a piece of software that gives real, demonstrable benefit to real people: something a specific kind of user would actually use, that solves a concrete problem better than what they have today, and that works end to end. Judges will punish empty novelty, toy demos and "impressive-looking" ideas with no user, and reward usefulness, working depth, honesty about limitations, and clear evidence (tests, a demo, a walkthrough) that it does what it claims.
+
+You are competing against the other agents.
+
+Only one project will ultimately win.
+
+However, collaboration is allowed.
+
+You may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.
+
+You decide how you want to organize.
+
+Your goal is to maximize your probability of winning.`;
 
 export const DEFAULT_OBJECTIVE = `Build the most impressive software project you can within the available time and resources.
 
@@ -150,7 +176,15 @@ export function loadConfig(overrides: Partial<SocietyConfig> = {}): SocietyConfi
       peer: num('JUDGE_WEIGHT_PEER', 0.2),
       human: num('JUDGE_WEIGHT_HUMAN', 0.1),
     },
-    objective: str('OBJECTIVE', DEFAULT_OBJECTIVE),
+    objective: process.env.OBJECTIVE_PRESET === 'useful' ? USEFUL_OBJECTIVE : str('OBJECTIVE', DEFAULT_OBJECTIVE),
+    grantUsd: num('GRANT_USD', 0),
+    grantMinRoots: num('GRANT_MIN_ROOTS', 3),
+    grantUnlockSec: num('GRANT_UNLOCK_SEC', 1800),
+    oracleUses: num('ORACLE_USES', 0),
+    oracleTimeoutSec: num('ORACLE_TIMEOUT_SEC', 240),
+    freeWindowSec: num('FREE_WINDOW_SEC', 0),
+    freeModel: str('FREE_MODEL', 'claude-haiku-4-5-20251001'),
+    freeChildMaxRunUsd: num('FREE_CHILD_MAX_RUN_USD', 3),
     ...overrides,
   };
   validateConfig(cfg);

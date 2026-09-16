@@ -7,7 +7,18 @@ export class BudgetError extends Error {}
  * Invariant: sum(root allocations) == sum over all agents of (remaining + spent).
  */
 export class Ledger {
+  /** Money that entered the society from outside the root allocations (e.g. a claimed grant). */
+  externalInflow = 0;
   constructor(private agents: Map<string, Agent>, private opts: { minChildBudgetUsd: number }) {}
+
+  /** Credit budget from an external source (grant). Conservation is tracked via externalInflow. */
+  grant(toId: string, amount: number) {
+    const to = this.agents.get(toId);
+    if (!to) throw new BudgetError('unknown agent');
+    if (!(amount > 0)) throw new BudgetError('grant must be positive');
+    to.budget.transferredIn = round(to.budget.transferredIn + amount);
+    this.externalInflow = round(this.externalInflow + amount);
+  }
 
   remaining(agentId: string): number {
     const a = this.agents.get(agentId);
@@ -16,8 +27,9 @@ export class Ledger {
   }
 
   /** Reserve budget from parent for a new child. Caller creates the child with allocated = amount. */
-  reserveForChild(parentId: string, amount: number) {
+  reserveForChild(parentId: string, amount: number, allowZero = false) {
     const p = this.agents.get(parentId)!;
+    if (allowZero && amount === 0) return;
     if (!(amount > 0)) throw new BudgetError('child budget must be positive');
     if (amount < this.opts.minChildBudgetUsd) throw new BudgetError(`child budget must be at least $${this.opts.minChildBudgetUsd}`);
     if (amount > this.remaining(parentId) + 1e-9) throw new BudgetError(`insufficient budget: need $${amount.toFixed(2)}, have $${this.remaining(parentId).toFixed(2)}`);
@@ -76,7 +88,8 @@ export class Ledger {
     }
     // Reservations that were refunded land as transfers; allocatedToChildren stays as the parent's outflow
     // and the child's allocation as inflow, so they cancel in `accounted`.
-    return { rootAllocated: round(rootAllocated), accounted: round(accounted), ok: Math.abs(rootAllocated - accounted) < 1e-6 };
+    rootAllocated = round(rootAllocated + this.externalInflow);
+    return { rootAllocated, accounted: round(accounted), ok: Math.abs(rootAllocated - accounted) < 1e-6 };
   }
 }
 

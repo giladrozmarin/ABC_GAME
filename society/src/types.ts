@@ -9,6 +9,8 @@ export interface AgentBudget {
   allocatedToChildren: number;
   spentLlm: number;
   spentFees: number;
+  /** LLM cost consumed while the agent was a free assistant (not deducted from anyone's budget). */
+  freeSpent: number;
 }
 
 export interface AgentUsage {
@@ -44,6 +46,11 @@ export interface Agent {
   childIds: string[];
   wakeAt: number;
   runCount: number;
+  /** Free assistant: runs are not charged; terminated when the parent's free window closes. */
+  free: boolean;
+  /** Free-assistant window end (ms epoch) for children spawned by this agent; 0 = not activated. */
+  freeUntil: number;
+  oracleUsed: number;
 }
 
 export function remainingBudget(b: AgentBudget): number {
@@ -147,7 +154,12 @@ export type EventType =
   | 'JUDGING_STARTED'
   | 'JUDGE_SCORE'
   | 'HUMAN_VOTE'
-  | 'JUDGING_COMPLETED';
+  | 'JUDGING_COMPLETED'
+  | 'GRANT_UNLOCKED'
+  | 'GRANT_CLAIMED'
+  | 'ORACLE_ASKED'
+  | 'ORACLE_ANSWERED'
+  | 'FREE_WINDOW_STARTED';
 
 export interface SocietyEvent {
   seq: number;

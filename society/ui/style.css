@@ -43,6 +43,8 @@ aside { border-left:1px solid var(--line); background:var(--panel); display:flex
 #timeline li.ev-AGENT_TERMINATED { border-color:var(--exh) } #timeline li.ev-PROJECT_PUBLISHED, #timeline li.ev-PROJECT_UPDATED { border-color:#fde68a } #timeline li.ev-BUDGET_TRANSFERRED { border-color:#fb923c }
 #timeline li.ev-AGENT_ACTIVITY, #timeline li.ev-BUDGET_SPENT { color:var(--muted); font-size:11px }
 #timeline li.ev-JUDGING_COMPLETED, #timeline li.ev-EXPERIMENT_ENDED { border-color:#fff; background:#1f2937 }
+#timeline li.ev-GRANT_UNLOCKED, #timeline li.ev-GRANT_CLAIMED { border-color:#fde68a; background:#1c1a10 }
+#timeline li.ev-ORACLE_ASKED, #timeline li.ev-ORACLE_ANSWERED { border-color:#c084fc; background:#1a1024 }
 .card { background:#0f172a; border:1px solid var(--line); border-radius:8px; padding:10px; margin-bottom:8px }
 .card h3 { margin:0 0 4px; font-size:14px }
 .card .row { display:flex; justify-content:space-between; gap:8px; font-size:12px; padding:2px 0 }

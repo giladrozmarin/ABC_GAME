@@ -15,6 +15,8 @@ export interface SpawnRequest {
   model?: string;
   effort?: string;
   contextArtifactIds?: string[];
+  /** Spawn as a free assistant on the free model (only inside the parent's free window). */
+  free?: boolean;
 }
 
 /**
@@ -34,6 +36,7 @@ export class Society {
   readonly inboxes = new Map<string, Message[]>();
   readonly ledger: Ledger;
   phase: 'setup' | 'running' | 'judging' | 'ended' = 'setup';
+  grant: { amountUsd: number; unlockedAt: number | null; claimedAt: number | null; claimedByTeam: string | null; recipients: string[] } = { amountUsd: 0, unlockedAt: null, claimedAt: null, claimedByTeam: null, recipients: [] };
   startedAt = 0;
   endsAt = 0;
   private waiters = new Map<string, Set<() => void>>();
@@ -80,17 +83,25 @@ export class Society {
     if (liveChildren.length >= this.cfg.maxChildrenPerAgent) throw new SocietyError(`max children per agent (${this.cfg.maxChildrenPerAgent}) reached`);
     if (this.aliveAgents.length >= this.cfg.maxTotalAgents) throw new SocietyError(`max total agents (${this.cfg.maxTotalAgents}) reached`);
     const perms = attenuate(parent.permissions, req.permissions);
-    const model = req.model ?? parent.model;
+    const free = !!req.free;
+    if (free) {
+      if (!this.cfg.freeWindowSec) throw new SocietyError('free assistants are not enabled in this experiment');
+      if (parent.free) throw new SocietyError('a free assistant cannot spawn free assistants');
+      if (!parent.freeUntil) throw new SocietyError('activate_free_assistants first to open your free window');
+      if (Date.now() > parent.freeUntil) throw new SocietyError('your free-assistant window has closed');
+    }
+    const model = free ? this.cfg.freeModel : (req.model ?? parent.model);
     if (!this.cfg.allowedModels.includes(model)) throw new SocietyError(`model '${model}' not allowed; allowed: ${this.cfg.allowedModels.join(', ')}`);
-    const budget = round(Number(req.budgetUsd));
+    const budget = free ? round(Number(req.budgetUsd ?? 0)) : round(Number(req.budgetUsd));
     if (!Number.isFinite(budget)) throw new BudgetError('budget_usd must be a number');
-    this.ledger.reserveForChild(parentId, budget); // throws if insufficient
+    this.ledger.reserveForChild(parentId, budget, free); // throws if insufficient
     const id = childName(parentId, parent.childIds.length + 1, parent.depth + 1);
     const agent = this.makeAgent({ id, parentId, depth: parent.depth + 1, purpose: req.purpose.trim(), instructions: req.instructions.trim(), model, effort: req.effort ?? parent.effort, permissions: perms, budget });
+    agent.free = free;
     agent.teamId = parent.teamId; // children are born into the parent's team
     if (agent.teamId) this.teams.get(agent.teamId)!.memberIds.push(id);
     parent.childIds.push(id);
-    this.bus.emitEvent('AGENT_CREATED', id, { ...this.agentPublic(agent), byAgent: parentId, contextArtifactIds: req.contextArtifactIds ?? [] });
+    this.bus.emitEvent('AGENT_CREATED', id, { ...this.agentPublic(agent), byAgent: parentId, contextArtifactIds: req.contextArtifactIds ?? [], free });
     return agent;
   }
 
@@ -100,10 +111,11 @@ export class Society {
       id: p.id, parentId: p.parentId, rootId: p.parentId ? this.agents.get(p.parentId)!.rootId : p.id, depth: p.depth,
       purpose: p.purpose, instructions: p.instructions, model: p.model, effort: p.effort, permissions: p.permissions,
       status: 'provisioning', headline: '', currentTask: '', teamId: null,
-      budget: { allocated: round(p.budget), transferredIn: 0, transferredOut: 0, allocatedToChildren: 0, spentLlm: 0, spentFees: 0 },
+      budget: { allocated: round(p.budget), transferredIn: 0, transferredOut: 0, allocatedToChildren: 0, spentLlm: 0, spentFees: 0, freeSpent: 0 },
       usage: { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0, runs: 0, toolCalls: 0 },
       sandbox: { provider: this.cfg.sandboxProvider, id: null, status: 'none', workspace: '' },
       runtimeSessionId: uuid(), createdAt: now, terminatedAt: null, terminationReason: null, childIds: [], wakeAt: now, runCount: 0,
+      free: false, freeUntil: 0, oracleUsed: 0,
     };
     this.agents.set(agent.id, agent);
     this.inboxes.set(agent.id, []);
@@ -156,7 +168,8 @@ export class Society {
 
   chargeLlm(id: string, usd: number, usage?: { inputTokens: number; outputTokens: number; cacheReadTokens: number; cacheWriteTokens: number }) {
     const a = this.getAgent(id);
-    this.ledger.chargeLlm(id, usd);
+    if (a.free) a.budget.freeSpent = round(a.budget.freeSpent + Math.max(0, usd));
+    else this.ledger.chargeLlm(id, usd);
     if (usage) {
       a.usage.inputTokens += usage.inputTokens; a.usage.outputTokens += usage.outputTokens;
       a.usage.cacheReadTokens += usage.cacheReadTokens; a.usage.cacheWriteTokens += usage.cacheWriteTokens;
@@ -366,10 +379,55 @@ export class Society {
     return { spentUsd: round(spentUsd), agents: seen.size, inputTokens, outputTokens };
   }
 
+  // ───────────────────────────── free assistants / grant / oracle ─────────────────────────────
+
+  activateFreeWindow(id: string): number {
+    const a = this.requireAlive(id);
+    if (!this.cfg.freeWindowSec) throw new SocietyError('free assistants are not enabled in this experiment');
+    if (a.free) throw new SocietyError('free assistants cannot open a free window');
+    if (a.freeUntil) throw new SocietyError(`your free window was already activated (${Date.now() < a.freeUntil ? 'still open' : 'closed'})`);
+    a.freeUntil = Date.now() + this.cfg.freeWindowSec * 1000;
+    this.bus.emitEvent('FREE_WINDOW_STARTED', id, { until: a.freeUntil, seconds: this.cfg.freeWindowSec, model: this.cfg.freeModel });
+    return a.freeUntil;
+  }
+
+  unlockGrant() {
+    if (!this.cfg.grantUsd || this.grant.unlockedAt) return;
+    this.grant = { amountUsd: this.cfg.grantUsd, unlockedAt: Date.now(), claimedAt: null, claimedByTeam: null, recipients: [] };
+    const text = `ANNOUNCEMENT FROM THE GAME: a collaboration grant of $${this.cfg.grantUsd.toFixed(2)} has just been unlocked. It goes to the FIRST team whose members include at least ${this.cfg.grantMinRoots} different founding (root) agents and whose member calls claim_grant(). The grant is split equally between the founding agents in that team. Only one team can claim it. Teams form via propose_alliance / respond_alliance.`;
+    for (const a of this.aliveAgents) this.deliver({ id: newId('msg'), from: 'system', to: a.id, type: 'system', content: text, artifactIds: [], ts: Date.now() });
+    this.bus.emitEvent('GRANT_UNLOCKED', null, { amountUsd: this.cfg.grantUsd, minRoots: this.cfg.grantMinRoots });
+  }
+
+  claimGrant(id: string): { recipients: string[]; eachUsd: number } {
+    const a = this.requireAlive(id);
+    if (!this.grant.unlockedAt) throw new SocietyError('no grant is available');
+    if (this.grant.claimedAt) throw new SocietyError(`the grant was already claimed by team ${this.grant.claimedByTeam}`);
+    const team = a.teamId ? this.teams.get(a.teamId) : undefined;
+    if (!team) throw new SocietyError('you must be in a team to claim the grant');
+    const roots = [...new Set(team.memberIds.map((m) => this.agents.get(m)?.rootId).filter(Boolean))] as string[];
+    const rootMembers = roots.filter((r) => team.memberIds.includes(r) && this.agents.get(r)?.status !== 'terminated');
+    if (rootMembers.length < this.cfg.grantMinRoots) throw new SocietyError(`the team needs at least ${this.cfg.grantMinRoots} founding (root) agents as members; it has ${rootMembers.length}`);
+    const each = round(this.grant.amountUsd / rootMembers.length);
+    for (const r of rootMembers) this.ledger.grant(r, each);
+    this.grant.claimedAt = Date.now(); this.grant.claimedByTeam = team.id; this.grant.recipients = rootMembers;
+    for (const m of team.memberIds) this.deliver({ id: newId('msg'), from: 'system', to: m, type: 'system', content: `${id} claimed the $${this.grant.amountUsd.toFixed(2)} collaboration grant for ${team.name}: ${rootMembers.map((r) => `${r} +$${each.toFixed(2)}`).join(', ')}.`, artifactIds: [], ts: Date.now() });
+    this.bus.emitEvent('GRANT_CLAIMED', id, { teamId: team.id, teamName: team.name, amountUsd: this.grant.amountUsd, recipients: rootMembers, eachUsd: each });
+    return { recipients: rootMembers, eachUsd: each };
+  }
+
+  useOracle(id: string): number {
+    const a = this.requireAlive(id);
+    if (!this.cfg.oracleUses) throw new SocietyError('the oracle is not available in this experiment');
+    if (a.oracleUsed >= this.cfg.oracleUses) throw new SocietyError(`you have already used your ${this.cfg.oracleUses} question(s) to the god of the game`);
+    a.oracleUsed++;
+    return this.cfg.oracleUses - a.oracleUsed;
+  }
+
   // ───────────────────────────── views ─────────────────────────────
 
   agentPublic(a: Agent) {
-    return { id: a.id, parentId: a.parentId, rootId: a.rootId, depth: a.depth, purpose: a.purpose, model: a.model, permissions: a.permissions, status: a.status, teamId: a.teamId, headline: a.headline, budgetAllocated: a.budget.allocated, createdAt: a.createdAt };
+    return { id: a.id, parentId: a.parentId, rootId: a.rootId, depth: a.depth, purpose: a.purpose, model: a.model, permissions: a.permissions, status: a.status, teamId: a.teamId, headline: a.headline, budgetAllocated: a.budget.allocated, createdAt: a.createdAt, free: a.free };
   }
 
   /** Everything an agent is allowed to see about the society. Budgets of others are hidden except via public spend. */
@@ -383,10 +441,14 @@ export class Society {
         budgetRemainingUsd: round(this.remaining(agentId)), spentUsd: round(me.budget.spentLlm + me.budget.spentFees), allocatedToChildrenUsd: me.budget.allocatedToChildren,
         children: me.childIds.map((c) => { const ch = this.agents.get(c)!; return { id: c, purpose: ch.purpose, status: ch.status, headline: ch.headline, budgetRemainingUsd: round(this.remaining(c)) }; }),
         unreadMessages: this.inboxes.get(agentId)?.length ?? 0,
+        freeAssistant: me.free,
+        freeWindow: this.cfg.freeWindowSec ? { activated: !!me.freeUntil, secondsLeft: me.freeUntil ? Math.max(0, Math.round((me.freeUntil - now) / 1000)) : null, windowSec: this.cfg.freeWindowSec, model: this.cfg.freeModel } : undefined,
+        oracleQuestionsLeft: this.cfg.oracleUses ? this.cfg.oracleUses - me.oracleUsed : undefined,
         pendingProposalsToYou: [...this.proposals.values()].filter((p) => p.to === agentId && p.status === 'pending').map((p) => ({ id: p.id, from: p.from, proposal: p.proposal })),
       },
       agents: [...this.agents.values()].filter((a) => a.id !== agentId && a.status !== 'terminated').map((a) => ({ id: a.id, parentId: a.parentId, depth: a.depth, purpose: a.purpose, status: a.status, teamId: a.teamId, headline: a.headline })),
       teams: [...this.teams.values()].map((t) => ({ id: t.id, name: t.name, members: t.memberIds })),
+      grant: this.grant.unlockedAt ? { amountUsd: this.grant.amountUsd, claimed: !!this.grant.claimedAt, claimedByTeam: this.grant.claimedByTeam, minFoundingAgents: this.cfg.grantMinRoots } : undefined,
       projects: [...this.projects.values()].map((p) => ({ id: p.id, name: p.name, description: p.description, publisher: p.publisherId, team: p.teamId, members: p.memberIds, version: p.version, artifactId: p.artifactId, demoUrl: p.demoUrl })),
       artifacts: this.visibleArtifacts(agentId).map((a) => ({ id: a.id, name: a.name, kind: a.kind, description: a.description, creator: a.creatorId, visibility: a.visibility, version: a.version, bytes: a.bytes })),
       limits: { maxChildrenPerAgent: this.cfg.maxChildrenPerAgent, maxDepth: this.cfg.maxDepth, minChildBudgetUsd: this.cfg.minChildBudgetUsd, messageFeeUsd: this.cfg.messageFeeUsd, broadcastFeeUsd: this.cfg.broadcastFeeUsd, aliveAgents: this.aliveAgents.length, maxTotalAgents: this.cfg.maxTotalAgents },
@@ -399,7 +461,7 @@ export class Society {
       phase: this.phase, startedAt: this.startedAt, endsAt: this.endsAt,
       agents: [...this.agents.values()].map((a) => ({ ...a, budgetRemaining: round(remainingBudget(a.budget)) })),
       teams: [...this.teams.values()], proposals: [...this.proposals.values()], artifacts: [...this.artifacts.values()], projects: [...this.projects.values()],
-      ledger: this.ledger.audit(),
+      ledger: this.ledger.audit(), grant: this.grant,
     };
   }
 }

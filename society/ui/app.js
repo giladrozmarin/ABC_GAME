@@ -18,7 +18,7 @@
       switch (e.type) {
         case 'EXPERIMENT_STARTED': st.startedAt = e.ts; st.endsAt = d.endsAt; st.mode = d.mode; st.phase = 'running'; break;
         case 'EXPERIMENT_PHASE': st.phase = d.phase; break;
-        case 'AGENT_CREATED': st.agents.set(d.id, { id: d.id, parentId: d.parentId, depth: d.depth, purpose: d.purpose, model: d.model, permissions: d.permissions, status: 'provisioning', teamId: d.teamId, headline: '', task: '', allocated: d.budgetAllocated, remaining: d.budgetAllocated, spent: 0, fees: 0, in: 0, out: 0, toChildren: 0, runs: 0, children: [], createdAt: e.ts, sandbox: 'starting', lastRun: null, tokens: 0 }); if (d.parentId && st.agents.get(d.parentId)) { const p = st.agents.get(d.parentId); p.children.push(d.id); p.toChildren += d.budgetAllocated; p.remaining -= d.budgetAllocated; } if (d.teamId && st.teams.get(d.teamId) && !st.teams.get(d.teamId).members.includes(d.id)) st.teams.get(d.teamId).members.push(d.id); break;
+        case 'AGENT_CREATED': st.agents.set(d.id, { id: d.id, parentId: d.parentId, depth: d.depth, purpose: d.purpose, model: d.model, permissions: d.permissions, status: 'provisioning', teamId: d.teamId, headline: '', task: '', allocated: d.budgetAllocated, remaining: d.budgetAllocated, spent: 0, fees: 0, in: 0, out: 0, toChildren: 0, runs: 0, children: [], createdAt: e.ts, sandbox: 'starting', lastRun: null, tokens: 0, free: !!d.free }); if (d.parentId && st.agents.get(d.parentId)) { const p = st.agents.get(d.parentId); p.children.push(d.id); p.toChildren += d.budgetAllocated; p.remaining -= d.budgetAllocated; } if (d.teamId && st.teams.get(d.teamId) && !st.teams.get(d.teamId).members.includes(d.id)) st.teams.get(d.teamId).members.push(d.id); break;
         case 'AGENT_STATUS': if (a) a.status = d.status; break;
         case 'AGENT_ACTIVITY': if (a) a.task = d.detail; break;
         case 'AGENT_HEADLINE': if (a) a.headline = d.headline; break;
@@ -39,6 +39,9 @@
         case 'ARTIFACT_FETCHED': st.flashes.push({ kind: 'artifact', from: d.from, to: e.agentId, ts: e.ts, seq: e.seq }); break;
         case 'PROJECT_PUBLISHED': case 'PROJECT_UPDATED': st.projects.set(d.id, { ...d, ts: e.ts }); break;
         case 'JUDGING_COMPLETED': st.scores = d.scores; st.winner = d.winner; break;
+        case 'GRANT_UNLOCKED': st.grant = { amount: d.amountUsd, claimed: false }; break;
+        case 'GRANT_CLAIMED': st.grant = { amount: d.amountUsd, claimed: true, team: d.teamName }; for (const r of d.recipients || []) { const x = st.agents.get(r); if (x) { x.in += d.eachUsd; x.remaining += d.eachUsd; } } break;
+        case 'FREE_WINDOW_STARTED': if (a) a.freeUntil = d.until; break;
         case 'EXPERIMENT_ENDED': st.phase = 'ended'; break;
       }
     }
@@ -86,6 +89,11 @@
       case 'HUMAN_VOTE': return `Human vote for ${esc(d.projectId)}`;
       case 'JUDGING_COMPLETED': return `<b>Judging complete.</b> Winner: ${esc(d.winner || 'none')}`;
       case 'EXPERIMENT_ENDED': return `<b>Experiment ended.</b>`;
+      case 'GRANT_UNLOCKED': return `<b>Collaboration grant unlocked:</b> ${usd(d.amountUsd)} for the first team with ≥${d.minRoots} founding agents`;
+      case 'GRANT_CLAIMED': return `${who}<b>claimed the ${usd(d.amountUsd)} grant</b> for ${esc(d.teamName)}: ${(d.recipients || []).map((r) => `${r} +${usd(d.eachUsd)}`).join(', ')}`;
+      case 'ORACLE_ASKED': return `${who}asks the god of the game: “${esc(d.question)}”`;
+      case 'ORACLE_ANSWERED': return `The god answers ${who}(${esc(d.by)}): “${esc(d.answer)}”`;
+      case 'FREE_WINDOW_STARTED': return `${who}opened a free-assistant window (${Math.round(d.seconds / 60)} min, ${esc(d.model)})`;
       default: return `${who}${esc(e.type)} ${esc(JSON.stringify(d).slice(0, 120))}`;
     }
   }
@@ -132,7 +140,7 @@
     enter.append('text').attr('class', 'sub budget').attr('text-anchor', 'middle').attr('dy', -30);
     const all = enter.merge(node);
     all.classed('selected', (d) => d.id === selected);
-    all.select('circle.core').attr('fill', (d) => color[d.data.status] || '#6b7280').attr('stroke', (d) => (d.data.teamId ? '#34d399' : '#0b0f17')).attr('stroke-width', (d) => (d.data.teamId ? 2 : 1)).attr('opacity', (d) => (d.data.status === 'terminated' ? 0.45 : 1))
+    all.select('circle.core').attr('fill', (d) => color[d.data.status] || '#6b7280').attr('stroke-dasharray', (d) => (d.data.free ? '3 2' : null)).attr('stroke', (d) => (d.data.free ? '#c084fc' : d.data.teamId ? '#34d399' : '#0b0f17')).attr('stroke-width', (d) => (d.data.teamId ? 2 : 1)).attr('opacity', (d) => (d.data.status === 'terminated' ? 0.45 : 1))
       .attr('r', (d) => 14 + Math.min(10, Math.sqrt(Math.max(0, d.data.remaining)) * 2));
     all.select('circle.ring').attr('stroke', (d) => (d.data.status === 'running' ? '#fbbf24' : 'none')).attr('r', (d) => 20 + Math.min(10, Math.sqrt(Math.max(0, d.data.remaining)) * 2))
       .attr('stroke-opacity', (d) => (d.data.status === 'running' ? 0.8 : 0));

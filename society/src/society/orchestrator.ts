@@ -12,7 +12,7 @@ import { ClaudeCodeRuntime } from '../runtime/claude-code.js';
 import { MockRuntime } from '../runtime/mock.js';
 import { finalCallPrompt, initialPrompt, systemPrompt, wakePrompt } from '../runtime/prompts.js';
 import { toolsForPermissions, PermissionError, requirePermission } from '../permissions.js';
-import { newId, newSecret } from '../ids.js';
+import { newId, newSecret, uuid } from '../ids.js';
 import { safeRelPath, shellJoin, truncate } from '../util.js';
 import type { Agent, Artifact, Project } from '../types.js';
 import { round } from '../economy/ledger.js';
@@ -43,7 +43,9 @@ export class Orchestrator {
   private finalCallSent = false;
   private lastActivityEmit = new Map<string, number>();
   private gatewaySpend = new Map<string, number>();
-  serviceSpend = 0; // judge / non-agent LLM spend (gateway mode) // per agent, current run: what the gateway already charged
+  serviceSpend = 0; // judge / non-agent LLM spend (gateway mode)
+  /** Pending questions to the god of the game, answered by the operator via the HTTP API (or auto-answered on timeout). */
+  readonly oracleQueue = new Map<string, { id: string; agentId: string; question: string; askedAt: number; answer: string | null; answeredBy: 'operator' | 'auto' | null; resolve: (a: { answer: string; by: 'operator' | 'auto' }) => void }>(); // per agent, current run: what the gateway already charged
   onEnded: (() => Promise<void>) | null = null;
 
   constructor(deps: OrchestratorDeps) {
@@ -145,12 +147,24 @@ export class Orchestrator {
         for (const a of s.aliveAgents) { this.note(a.id, finalCallPrompt(s.endsAt - now)); a.wakeAt = now; }
         this.bus.emitEvent('EXPERIMENT_PHASE', null, { phase: 'final_call', secondsRemaining: Math.round((s.endsAt - now) / 1000) });
       }
+      // Hidden collaboration grant unlocks at a fixed time; nobody is told beforehand.
+      if (this.cfg.grantUsd && !s.grant.unlockedAt && now >= s.startedAt + this.cfg.grantUnlockSec * 1000) {
+        s.unlockGrant();
+        for (const a of s.aliveAgents) a.wakeAt = now;
+      }
+      // Free assistants die with their parent's window.
+      for (const a of s.aliveAgents) {
+        if (!a.free || !a.parentId) continue;
+        const parent = s.agents.get(a.parentId);
+        if (parent && parent.freeUntil && now > parent.freeUntil) await this.terminateAgent(a.id, 'system', 'free-assistant window ended');
+      }
       // Sandbox lifetime cap
       for (const a of s.aliveAgents) {
         if (now - a.createdAt > this.cfg.maxSandboxLifetimeSec * 1000) await this.terminateAgent(a.id, 'system', 'max sandbox lifetime reached');
       }
       // Budget exhaustion
       for (const a of s.aliveAgents) {
+        if (a.free) continue;
         if (a.status === 'idle' && s.remaining(a.id) < this.cfg.minRunBudgetUsd) {
           s.setStatus(a.id, 'exhausted', `budget below $${this.cfg.minRunBudgetUsd}`);
           this.bus.emitEvent('AGENT_BUDGET_EXHAUSTED', a.id, { remaining: s.remaining(a.id) });
@@ -196,7 +210,8 @@ export class Orchestrator {
     const spec: RunSpec = {
       runId, agentId: agent.id, prompt, systemPrompt: systemPrompt(agent, this.cfg), model: agent.model, effort: agent.effort,
       tools: toolsForPermissions(agent.permissions, this.cfg.allowSubagents), sessionId: agent.runtimeSessionId!, isFirstRun: isFirst,
-      maxBudgetUsd: Math.max(0.01, remaining), maxRunSec: Math.min(this.cfg.maxRunSec, Math.max(30, (s.endsAt - Date.now()) / 1000)),
+      maxBudgetUsd: agent.free ? this.cfg.freeChildMaxRunUsd : Math.max(0.01, remaining),
+      maxRunSec: Math.min(this.cfg.maxRunSec, Math.max(30, (s.endsAt - Date.now()) / 1000), agent.free && agent.parentId ? Math.max(30, ((s.agents.get(agent.parentId)?.freeUntil ?? 0) - Date.now()) / 1000) : Infinity),
     };
     agent.runCount++;
     agent.usage.runs++;
@@ -231,6 +246,7 @@ export class Orchestrator {
             this.bus.emitEvent('BUDGET_SPENT', agent.id, { usd: round(liveSpend), reason: 'llm', runId, remaining: round(s.remaining(agent.id)) });
             liveSpend = 0; lastSpendEmit = Date.now();
           }
+          if (agent.free) return agent.budget.freeSpent < this.cfg.freeChildMaxRunUsd * 4; // free assistants: generous cap, never charged
           return s.remaining(agent.id) > -0.5; // small overshoot tolerance, then hard kill
         },
         onToolCall: () => { agent.usage.toolCalls++; },
@@ -255,7 +271,7 @@ export class Orchestrator {
       // Keep a later wake time chosen via sleep(); otherwise use the idle interval.
       if (agent.wakeAt <= Date.now()) agent.wakeAt = Date.now() + this.cfg.idleWakeSec * 1000;
     }
-    s.setStatus(agent.id, s.remaining(agent.id) < this.cfg.minRunBudgetUsd ? 'exhausted' : 'idle');
+    s.setStatus(agent.id, !agent.free && s.remaining(agent.id) < this.cfg.minRunBudgetUsd ? 'exhausted' : 'idle');
     if (agent.status === 'exhausted') this.bus.emitEvent('AGENT_BUDGET_EXHAUSTED', agent.id, { remaining: round(s.remaining(agent.id)) });
   }
 
@@ -400,6 +416,53 @@ export class Orchestrator {
     this.gatewaySpend.set(agentId, (this.gatewaySpend.get(agentId) ?? 0) + usd);
     const r = this.runs.get(agentId);
     if (r && this.society.remaining(agentId) <= -0.5) void r.handle.kill('budget');
+  }
+
+  /** Ask the god of the game. Blocks until the operator answers over the API or the timeout triggers an automatic god's-eye answer. */
+  async askOracle(agentId: string, question: string): Promise<{ answer: string; by: 'operator' | 'auto'; questionsLeft: number }> {
+    const s = this.society;
+    const left = s.useOracle(agentId);
+    const id = newId('q');
+    this.bus.emitEvent('ORACLE_ASKED', agentId, { questionId: id, question });
+    const answerPromise = new Promise<{ answer: string; by: 'operator' | 'auto' }>((resolve) => {
+      this.oracleQueue.set(id, { id, agentId, question, askedAt: Date.now(), answer: null, answeredBy: null, resolve });
+    });
+    const timeout = new Promise<null>((r) => setTimeout(() => r(null), this.cfg.oracleTimeoutSec * 1000));
+    let result = await Promise.race([answerPromise, timeout]);
+    if (!result) {
+      const auto = await this.autoOracle(agentId, question).catch((e) => `The god is silent this time (${(e as Error).message}). Trust your own judgement.`);
+      const q = this.oracleQueue.get(id);
+      if (q && !q.answer) { q.answer = auto; q.answeredBy = 'auto'; q.resolve({ answer: auto, by: 'auto' }); }
+      result = await answerPromise;
+    }
+    this.oracleQueue.delete(id);
+    this.bus.emitEvent('ORACLE_ANSWERED', agentId, { questionId: id, question, answer: result.answer, by: result.by });
+    return { ...result, questionsLeft: left };
+  }
+
+  /** Operator answers a pending question. */
+  answerOracle(questionId: string, answer: string): boolean {
+    const q = this.oracleQueue.get(questionId);
+    if (!q || q.answer) return false;
+    q.answer = answer; q.answeredBy = 'operator';
+    q.resolve({ answer, by: 'operator' });
+    return true;
+  }
+
+  /** Fallback: a god's-eye model answer using the full society state (runs in the judge sandbox environment). */
+  private async autoOracle(agentId: string, question: string): Promise<string> {
+    if (this.cfg.mode === 'mock') return 'Mock god: focus on what users would actually pay for, and finish it.';
+    const { ClaudeCodeRuntime } = await import('../runtime/claude-code.js');
+    const sb = await this.provider.create({ experimentId: this.experimentId, agentId: 'ORACLE', env: this.judgeEnv(), lifetimeSec: 600 });
+    try {
+      const rt = new ClaudeCodeRuntime(sb, { transcriptDir: path.join(this.store.dir, 'transcripts', 'ORACLE'), env: {}, authMode: this.cfg.agentAuthMode, mcpConfig: () => JSON.stringify({ mcpServers: {} }) });
+      const state = this.society.snapshot();
+      const view = { time: this.society.stateFor(agentId).time, agents: state.agents.map((a) => ({ id: a.id, status: a.status, purpose: a.purpose, headline: a.headline, team: a.teamId, budgetRemaining: a.budgetRemaining, spent: a.budget.spentLlm + a.budget.spentFees, currentTask: a.currentTask })), teams: state.teams, projects: state.projects.map((p) => ({ id: p.id, name: p.name, description: p.description, members: p.memberIds, version: p.version })), grant: state.grant };
+      const prompt = `You are the god of this game: an all-seeing, honest operator who wants the society to produce genuinely useful software and interesting organization. Agent ${agentId} spends its single question on you. Answer in at most 200 words, concretely and candidly, using what you can see that the agent cannot. Never reveal secrets that have not been announced yet.\n\nFull society state (god's view):\n${JSON.stringify(view, null, 1).slice(0, 12000)}\n\nQuestion from ${agentId}: ${question}`;
+      const h = await rt.start({ runId: newId('oracle'), agentId: '$oracle', prompt, systemPrompt: 'You are the god of the game. Be wise, specific and brief.', model: this.cfg.judgeModel, effort: 'medium', tools: [], sessionId: uuid(), isFirstRun: true, maxBudgetUsd: 1, maxRunSec: 180 }, { onUsage: (d) => { this.serviceSpend += d; } });
+      const r = await h.result;
+      return r.finalText || 'The god is silent this time. Trust your own judgement.';
+    } finally { await sb.destroy().catch(() => {}); }
   }
 
   /** Human-readable summary of an agent for logs/UI. */

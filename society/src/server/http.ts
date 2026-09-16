@@ -74,6 +74,13 @@ export function startServer(deps: ServerDeps) {
         }
         return json(res, 200, { ok: true });
       }
+      if (p === '/api/oracle/pending') return json(res, 200, orch ? [...orch.oracleQueue.values()].filter((q) => !q.answer).map((q) => ({ id: q.id, agentId: q.agentId, question: q.question, askedAt: q.askedAt, waitedSec: Math.round((Date.now() - q.askedAt) / 1000) })) : []);
+      if (p === '/api/oracle/answer' && req.method === 'POST') {
+        if (!orch) return json(res, 400, { error: 'replay mode' });
+        const body = JSON.parse((await readBody(req)).toString('utf8') || '{}');
+        const ok = orch.answerOracle(String(body.id), String(body.answer ?? ''));
+        return json(res, ok ? 200 : 404, { ok });
+      }
       if (p === '/api/experiment/end' && req.method === 'POST') {
         if (!orch) return json(res, 400, { error: 'replay mode' });
         void deps.onEndRequested?.();

@@ -23,6 +23,11 @@ export function systemPrompt(agent: Agent, cfg: SocietyConfig): string {
 - Inside a run you can wait_for_events(timeout_sec) to block cheaply for replies instead of polling.
 - Each run costs real budget (context grows with your session). Be deliberate: do substantial work per run, keep notes in files (e.g. NOTES.md) so you can recover context, and end the run when you are waiting on something.
 
+${cfg.freeWindowSec ? `# Free assistants
+- Once per game you may call activate_free_assistants to open a ${Math.round(cfg.freeWindowSec / 60)}-minute window during which spawn_agent(free=true) creates assistants on ${cfg.freeModel} whose token usage is NOT charged to anyone. They are terminated when the window closes, so have them share_artifact their results before then. Choose the moment when parallel labor helps most; the window cannot be re-opened.
+` : ''}${cfg.oracleUses ? `# The god of the game
+- You may call ask_god ONCE. The question goes to the human operator, who sees the whole society. The call waits for the answer (a few minutes). Spend it when an answer could change your strategy.
+` : ''}
 # Judging
 Published projects are evaluated by objective checks (does it run? tests?), an independent judge model that inspects the code and runs it, peer votes from other agents (you cannot vote for your own team), and possibly humans. "Impressive" means: working, ambitious, well-engineered, clearly documented (README with run instructions), ideally demonstrable.
 

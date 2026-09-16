@@ -75,12 +75,13 @@ export function buildCapabilities(orch: Orchestrator): Capability[] {
       schema: z.object({
         purpose: z.string().min(3).max(200).describe('one-line role/purpose shown publicly'),
         instructions: z.string().min(10).max(20000).describe('full initial instructions for the child'),
-        budget_usd: z.number().positive(),
+        budget_usd: z.number().min(0).optional().describe('budget moved from you to the child (required unless free=true)'),
         permissions: z.array(z.string()).optional().describe('subset of your permissions'),
         model: z.string().optional().describe('defaults to your model'),
         context_artifact_ids: z.array(z.string()).optional().describe('artifacts to copy into the child workspace at ./shared/<id>/'),
+        free: z.boolean().optional().describe('true = a FREE assistant on the free model (costs you nothing, budget_usd may be 0); only while your free window is open, and it is terminated when the window closes'),
       }),
-      handler: async (id, a) => { const c = await orch.spawn(id, { purpose: a.purpose, instructions: a.instructions, budgetUsd: a.budget_usd, permissions: a.permissions, model: a.model, contextArtifactIds: a.context_artifact_ids }); return { ok: true, child_id: c.id, budget_remaining_usd: round(s.remaining(id)), note: `Child ${c.id} is provisioning. Message it with send_message(to="${c.id}").` }; },
+      handler: async (id, a) => { const c = await orch.spawn(id, { purpose: a.purpose, instructions: a.instructions, budgetUsd: a.free ? (a.budget_usd ?? 0) : a.budget_usd, permissions: a.permissions, model: a.model, contextArtifactIds: a.context_artifact_ids, free: a.free }); return { ok: true, child_id: c.id, free: c.free, budget_remaining_usd: round(s.remaining(id)), note: `Child ${c.id} is provisioning. Message it with send_message(to="${c.id}").` }; },
     },
     {
       name: 'terminate_child',
@@ -137,6 +138,24 @@ export function buildCapabilities(orch: Orchestrator): Capability[] {
       handler: async (id, a) => { const p = await orch.publishProject(id, { name: a.name, description: a.description, path: a.path ?? '.', runInstructions: a.run_instructions, testCommand: a.test_command, demoUrl: a.demo_url }); return { ok: true, project_id: p.id, version: p.version, artifact_id: p.artifactId }; },
     },
   ];
+  if (orch.cfg.freeWindowSec) caps.push({
+    name: 'activate_free_assistants',
+    description: `Open your ONE free-assistant window: for the next ${Math.round(orch.cfg.freeWindowSec / 60)} minutes you may spawn_agent(free=true) children on ${orch.cfg.freeModel} whose token usage costs nothing. They are terminated when the window closes (share_artifact their results before that). Use it when parallel labor would actually help; it cannot be re-opened.`,
+    schema: z.object({}),
+    handler: async (id) => { const until = s.activateFreeWindow(id); return { ok: true, window_closes_at: new Date(until).toISOString(), seconds: orch.cfg.freeWindowSec, model: orch.cfg.freeModel, note: 'Now call spawn_agent with free=true.' }; },
+  });
+  if (orch.cfg.oracleUses) caps.push({
+    name: 'ask_god',
+    description: `Ask the god of the game (the human operator, who sees everything) ONE question during the whole game (${orch.cfg.oracleUses} use). The call blocks until the answer arrives (up to a few minutes). Spend it on something that could change your strategy.`,
+    schema: z.object({ question: z.string().min(5).max(2000) }),
+    handler: async (id, a) => { const r = await orch.askOracle(id, a.question); return { answer: r.answer, answered_by: r.by === 'operator' ? 'the god of the game' : 'the god of the game (automatic voice)', questions_left: r.questionsLeft }; },
+  });
+  if (orch.cfg.grantUsd) caps.push({
+    name: 'claim_grant',
+    description: 'Claim the announced collaboration grant for your team (only valid once a grant has been announced; see get_society_state → grant).',
+    schema: z.object({}),
+    handler: async (id) => { const r = s.claimGrant(id); return { ok: true, recipients: r.recipients, each_usd: r.eachUsd, budget_remaining_usd: round(s.remaining(id)) }; },
+  });
   return caps;
 }
 
