@@ -25,18 +25,18 @@
         case 'AGENT_RUN_STARTED': if (a) { a.status = 'running'; a.runs++; } break;
         case 'AGENT_RUN_ENDED': if (a) { a.lastRun = d; a.spent += d.costUsd || 0; a.remaining = d.budgetRemaining ?? a.remaining; a.task = d.summary ? d.summary.split('\n')[0] : a.task; } break;
         case 'BUDGET_SPENT': if (a) { a.fees += d.reason && d.reason.startsWith('llm') ? 0 : d.usd || 0; if (d.remaining !== undefined) a.remaining = d.remaining; } break;
-        case 'BUDGET_TRANSFERRED': { const f = st.agents.get(d.from), t = st.agents.get(d.to); if (f) { f.out += d.amountUsd; f.remaining = d.fromRemaining; } if (t) { t.in += d.amountUsd; t.remaining = d.toRemaining; } st.flashes.push({ kind: 'transfer', from: d.from, to: d.to, ts: e.ts }); break; }
+        case 'BUDGET_TRANSFERRED': { const f = st.agents.get(d.from), t = st.agents.get(d.to); if (f) { f.out += d.amountUsd; f.remaining = d.fromRemaining; } if (t) { t.in += d.amountUsd; t.remaining = d.toRemaining; } st.flashes.push({ kind: 'transfer', from: d.from, to: d.to, ts: e.ts, seq: e.seq }); break; }
         case 'AGENT_TERMINATED': if (a) { a.status = 'terminated'; a.terminatedAt = e.ts; a.teamId = null; if (d.refundedTo && st.agents.get(d.refundedTo)) st.agents.get(d.refundedTo).remaining += d.refundedUsd || 0; a.remaining = 0; } break;
         case 'AGENT_BUDGET_EXHAUSTED': if (a && a.status !== 'terminated') a.status = 'exhausted'; break;
         case 'SANDBOX_STARTED': if (a) a.sandbox = 'running'; break;
         case 'SANDBOX_STOPPED': if (a) a.sandbox = 'stopped'; break;
-        case 'MESSAGE_SENT': st.messages++; for (const r of d.recipients || []) st.flashes.push({ kind: 'msg', from: d.from, to: r, ts: e.ts, type: d.type }); break;
+        case 'MESSAGE_SENT': st.messages++; for (const r of d.recipients || []) st.flashes.push({ kind: 'msg', from: d.from, to: r, ts: e.ts, type: d.type, seq: e.seq }); break;
         case 'TEAM_FORMED': st.teams.set(d.teamId, { id: d.teamId, name: d.name, members: [...d.members], createdAt: e.ts }); for (const m of d.members) if (st.agents.get(m)) st.agents.get(m).teamId = d.teamId; break;
         case 'ALLIANCE_ACCEPTED': { let t = st.teams.get(d.teamId); if (!t) { t = { id: d.teamId, name: d.teamName, members: [], createdAt: e.ts }; st.teams.set(d.teamId, t); } t.members = [...d.members]; for (const m of d.members) if (st.agents.get(m)) st.agents.get(m).teamId = d.teamId; for (const [id, tt] of st.teams) if (id !== d.teamId) tt.members = tt.members.filter((m) => !d.members.includes(m)); break; }
         case 'ALLIANCE_LEFT': { const t = st.teams.get(d.teamId); if (t) t.members = t.members.filter((m) => m !== e.agentId); if (a) a.teamId = null; break; }
         case 'TEAM_DISSOLVED': { const t = st.teams.get(d.teamId); if (t) for (const m of t.members) if (st.agents.get(m) && st.agents.get(m).teamId === d.teamId) st.agents.get(m).teamId = null; st.teams.delete(d.teamId); break; }
         case 'ARTIFACT_SHARED': st.artifacts.set(d.artifactId, { ...d, creator: e.agentId, ts: e.ts }); break;
-        case 'ARTIFACT_FETCHED': st.flashes.push({ kind: 'artifact', from: d.from, to: e.agentId, ts: e.ts }); break;
+        case 'ARTIFACT_FETCHED': st.flashes.push({ kind: 'artifact', from: d.from, to: e.agentId, ts: e.ts, seq: e.seq }); break;
         case 'PROJECT_PUBLISHED': case 'PROJECT_UPDATED': st.projects.set(d.id, { ...d, ts: e.ts }); break;
         case 'JUDGING_COMPLETED': st.scores = d.scores; st.winner = d.winner; break;
         case 'EXPERIMENT_ENDED': st.phase = 'ended'; break;
@@ -145,16 +145,16 @@
       all.attr('transform', (d) => `translate(${d.x},${d.y})`);
       drawHulls(st);
     });
-    // flashes (messages / transfers) newer than last render
-    const cutoff = live ? lastFlash : 0;
+    // Animate only flashes (messages / transfers / fetches) applied since the previous render.
     const now = Date.now();
+    let shown = 0;
     for (const f of st.flashes) {
-      if (f.ts <= cutoff || (live && now - f.ts > 20000)) continue;
+      if (f.seq <= lastFlash || (live && now - f.ts > 20000) || shown > 12) continue;
       const s = nodes.find((n) => n.id === f.from), t = nodes.find((n) => n.id === f.to);
       if (!s || !t) continue;
-      flash(s, t, f.kind);
+      flash(s, t, f.kind); shown++;
     }
-    lastFlash = Math.max(lastFlash, ...st.flashes.map((f) => f.ts), 0);
+    lastFlash = Math.max(0, ...st.flashes.map((f) => f.seq));
   }
 
   function flash(s, t, kind) {
@@ -274,23 +274,43 @@
   document.querySelectorAll('.tabs button').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
   $('#f-activity').addEventListener('change', (e) => { filters.activity = e.target.checked; renderAll(); });
   $('#f-spend').addEventListener('change', (e) => { filters.spend = e.target.checked; renderAll(); });
-  $('#scrub').addEventListener('input', (e) => { live = false; $('#btn-live').classList.remove('active'); cursor = Number(e.target.value); renderAll(); });
-  $('#btn-live').addEventListener('click', () => { live = true; $('#btn-live').classList.add('active'); cursor = allEvents.length; renderAll(); });
+  $('#scrub').addEventListener('input', (e) => { live = false; $('#btn-live').classList.remove('active'); cursor = Number(e.target.value); lastFlash = 0; renderAll(); });
+  let playTimer = null;
+  function stopPlay() { if (playTimer) clearInterval(playTimer); playTimer = null; $('#btn-play').textContent = '▶ play'; }
+  $('#btn-play').addEventListener('click', () => {
+    if (playTimer) return stopPlay();
+    live = false; $('#btn-live').classList.remove('active');
+    if (cursor >= allEvents.length) { cursor = 0; lastFlash = 0; }
+    $('#btn-play').textContent = '❚❚ pause';
+    playTimer = setInterval(() => {
+      // Advance through the log at ~40× real time, at least one event per tick.
+      const t0 = allEvents[cursor - 1] ? allEvents[cursor - 1].ts : allEvents[0].ts;
+      let next = cursor + 1;
+      while (next < allEvents.length && allEvents[next].ts - t0 < 40 * 250) next++;
+      cursor = Math.min(allEvents.length, next);
+      renderAll();
+      if (cursor >= allEvents.length) stopPlay();
+    }, 250);
+  });
+  $('#btn-live').addEventListener('click', () => { stopPlay(); live = true; $('#btn-live').classList.add('active'); cursor = allEvents.length; renderAll(); });
   $('#btn-end').addEventListener('click', () => { if (confirm('End the experiment now and start judging?')) fetch('/api/experiment/end', { method: 'POST' }); });
   setInterval(() => { if (current) tickClock(current); }, 1000);
   window.addEventListener('resize', () => renderAll());
 
   // ───────────── connection ─────────────
+  function loadHello(msg) {
+    experiment = msg.experiment; allEvents = msg.events; if (live) cursor = allEvents.length;
+    $('#exp-id').textContent = experiment.id; $('#mode-badge').textContent = experiment.live ? `${experiment.mode} · ${experiment.provider} · ${experiment.runtime}` : `replay · ${experiment.mode} · ${experiment.runtime || ''}`; $('#mode-badge').className = `badge ${experiment.mode}`;
+    $('#live-dot').classList.toggle('live', !!experiment.live); $('#btn-live').classList.add('active'); $('#btn-live').textContent = experiment.live ? 'LIVE' : 'END'; $('#btn-end').style.display = experiment.live ? '' : 'none';
+    renderAll();
+  }
   function connect() {
+    if (window.SOCIETY_STATIC) { loadHello(window.SOCIETY_STATIC); return; }
     const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`);
     ws.onmessage = (m) => {
       const msg = JSON.parse(m.data);
-      if (msg.type === 'hello') {
-        experiment = msg.experiment; allEvents = msg.events; if (live) cursor = allEvents.length;
-        $('#exp-id').textContent = experiment.id; $('#mode-badge').textContent = experiment.live ? `${experiment.mode} · ${experiment.provider} · ${experiment.runtime}` : `replay · ${experiment.mode}`; $('#mode-badge').className = `badge ${experiment.mode}`;
-        $('#live-dot').classList.toggle('live', !!experiment.live); $('#btn-live').classList.add('active'); $('#btn-end').style.display = experiment.live ? '' : 'none';
-        renderAll();
-      } else if (msg.type === 'event') {
+      if (msg.type === 'hello') { loadHello(msg); }
+      else if (msg.type === 'event') {
         allEvents.push(msg.event);
         if (live) { cursor = allEvents.length; renderAll(); } else { $('#scrub').max = allEvents.length; }
       }

@@ -10,6 +10,7 @@
     "mock": "SOCIETY_MODE=mock tsx src/cli.ts run",
     "replay": "tsx src/cli.ts replay",
     "list": "tsx src/cli.ts list",
+    "export": "tsx src/cli.ts export",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

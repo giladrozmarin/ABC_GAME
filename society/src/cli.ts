@@ -7,6 +7,7 @@ import { createSandboxProvider } from './sandbox/index.js';
 import { Orchestrator } from './society/orchestrator.js';
 import { startServer } from './server/http.js';
 import { runJudging, type JudgingOutcome } from './judging/index.js';
+import { exportExperiment } from './export.js';
 
 const cmd = process.argv[2] ?? 'run';
 
@@ -14,7 +15,16 @@ async function main() {
   if (cmd === 'list') return list();
   if (cmd === 'replay') return replay(process.argv[3]);
   if (cmd === 'run') return run();
-  console.error('usage: cli.ts run | replay <experimentId> | list');
+  if (cmd === 'export') {
+    const cfg = loadConfig({ mode: 'mock' });
+    const id = process.argv[3];
+    if (!id) { console.error('export requires an experiment id'); process.exit(1); }
+    const out = process.argv[4] ?? path.join(cfg.dataDir, id, 'replay.html');
+    fs.writeFileSync(out, exportExperiment(path.join(cfg.dataDir, id), id));
+    console.log(`wrote ${out} (${(fs.statSync(out).size / 1024).toFixed(0)} KB) — open it in a browser`);
+    return;
+  }
+  console.error('usage: cli.ts run | replay <experimentId> | export <experimentId> [out.html] | list');
   process.exit(1);
 }
 

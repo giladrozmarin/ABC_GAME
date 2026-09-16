@@ -34,7 +34,20 @@ Three ways to run it:
 
 Other commands: `npm test` (invariant tests), `npm run list` (past experiments),
 `npm run replay -- <experimentId>` (serve a stored experiment for scrubbing),
-`npm run typecheck`.
+`npm run export -- <experimentId> [out.html]` (one self-contained HTML replay,
+works offline), `npm run typecheck`.
+
+### See a real run without spending anything
+`examples/exp_20260914233747_dgkc` is a complete record of a real 7-minute run
+(2 Haiku root agents × $1.50, process provider): event log, per-run usage,
+full agent and judge transcripts, scores, and the small project artifacts.
+
+```bash
+DATA_DIR=examples npm run replay -- exp_20260914233747_dgkc   # http://localhost:4000, press ▶ play
+DATA_DIR=examples npm run export -- exp_20260914233747_dgkc replay.html
+```
+(The two 25 MB snapshots agent A published, with `node_modules` committed into
+its git history, are omitted from the example, so their download links 404.)
 
 ## Architecture
 

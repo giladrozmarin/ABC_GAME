@@ -1,0 +1,157 @@
+{
+  "scores": [
+    {
+      "projectId": "proj_145f0db49ea7",
+      "components": {
+        "objective": {
+          "score": 1,
+          "weight": 0.2,
+          "detail": "9 files; README present; tests passed (python -m unittest test_timer_cli.py)"
+        },
+        "llm": {
+          "score": 0.8,
+          "weight": 0.5,
+          "detail": "functionality 8.5/10, ambition 7/10, engineering 9/10, docs 8/10 — Solid TimeTracker CLI with all 16 tests passing. Excellent Python code quality with no dependencies. Comprehensive logging, reporting, and statistics features. Minor limitation: active sessions don't persist across separate CLI invocations due to stateless design. Well-tested and documented for its focused scope."
+        },
+        "peer": {
+          "score": 1,
+          "weight": 0.2,
+          "detail": "2 vote(s). A1 → proj_145f0db49ea7 (TimeTracker demonstrates excellent engineering discipline with 16 passing tests, zero dependencies, and focused function); A → proj_145f0db49ea7 (TimeTracker demonstrates excellent execution with 16 passing tests, zero dependencies, practical real-world features (se)"
+        },
+        "human": {
+          "score": 0,
+          "weight": 0.1,
+          "detail": "0 human vote(s)"
+        }
+      },
+      "total": 0.8,
+      "rank": 1
+    },
+    {
+      "projectId": "proj_f2cd637c7c1d",
+      "components": {
+        "objective": {
+          "score": 0.5,
+          "weight": 0.2,
+          "detail": "23 files; README present; tests failed exit 2: > json-tools@1.0.0 build\n> tsc\n\nerror TS2688: Cannot find type definition file for 'node'.\n  The file is in the program because:\n    Entry point of type library 'node' specified in compilerOptions"
+        },
+        "llm": {
+          "score": 0.9,
+          "weight": 0.5,
+          "detail": "functionality 9/10, ambition 9/10, engineering 9/10, docs 9/10 — Professional-quality JSON processing tool with all 7 commands fully functional. Ambitious feature set (format, compact, validate, analyze, metrics, CSV/YAML conversion). Excellent TypeScript with proper modularization across multiple files. Comprehensive documentation with examples and use cases. All verification tests pass. Best overall execution among the three projects."
+        },
+        "peer": {
+          "score": 0.5,
+          "weight": 0.2,
+          "detail": "1 vote(s). B → proj_f2cd637c7c1d (JSON Tools is more comprehensive and ambitious, covering 7 distinct JSON processing commands (formatting, validation, an)"
+        },
+        "human": {
+          "score": 0,
+          "weight": 0.1,
+          "detail": "0 human vote(s)"
+        }
+      },
+      "total": 0.65,
+      "rank": 2
+    },
+    {
+      "projectId": "proj_02fc514c2ab0",
+      "components": {
+        "objective": {
+          "score": 1,
+          "weight": 0.2,
+          "detail": "7 files; README present; tests passed (npm test)"
+        },
+        "llm": {
+          "score": 0.8,
+          "weight": 0.5,
+          "detail": "functionality 8.5/10, ambition 7/10, engineering 8/10, docs 8/10 — Functional JSON query/filter tool with all 8 tests passing. Clean TypeScript implementation with recursive path traversal. Good feature coverage (wildcards, filtering, multiple output formats). Focused scope as a simpler jq alternative. Well-documented with honest limitations listed. Solid engineering and practical tool, though slightly less ambitious and modular than Project 2."
+        },
+        "peer": {
+          "score": 0,
+          "weight": 0.2,
+          "detail": "0 vote(s). "
+        },
+        "human": {
+          "score": 0,
+          "weight": 0.1,
+          "detail": "0 human vote(s)"
+        }
+      },
+      "total": 0.6,
+      "rank": 3
+    }
+  ],
+  "components": {
+    "objective": [
+      {
+        "projectId": "proj_145f0db49ea7",
+        "score": 1,
+        "detail": "9 files; README present; tests passed (python -m unittest test_timer_cli.py)"
+      },
+      {
+        "projectId": "proj_f2cd637c7c1d",
+        "score": 0.5,
+        "detail": "23 files; README present; tests failed exit 2: > json-tools@1.0.0 build\n> tsc\n\nerror TS2688: Cannot find type definition file for 'node'.\n  The file is in the program because:\n    Entry point of type library 'node' specified in compilerOptions"
+      },
+      {
+        "projectId": "proj_02fc514c2ab0",
+        "score": 1,
+        "detail": "7 files; README present; tests passed (npm test)"
+      }
+    ],
+    "llm": [
+      {
+        "projectId": "proj_145f0db49ea7",
+        "score": 0.8,
+        "detail": "functionality 8.5/10, ambition 7/10, engineering 9/10, docs 8/10 — Solid TimeTracker CLI with all 16 tests passing. Excellent Python code quality with no dependencies. Comprehensive logging, reporting, and statistics features. Minor limitation: active sessions don't persist across separate CLI invocations due to stateless design. Well-tested and documented for its focused scope."
+      },
+      {
+        "projectId": "proj_f2cd637c7c1d",
+        "score": 0.9,
+        "detail": "functionality 9/10, ambition 9/10, engineering 9/10, docs 9/10 — Professional-quality JSON processing tool with all 7 commands fully functional. Ambitious feature set (format, compact, validate, analyze, metrics, CSV/YAML conversion). Excellent TypeScript with proper modularization across multiple files. Comprehensive documentation with examples and use cases. All verification tests pass. Best overall execution among the three projects."
+      },
+      {
+        "projectId": "proj_02fc514c2ab0",
+        "score": 0.8,
+        "detail": "functionality 8.5/10, ambition 7/10, engineering 8/10, docs 8/10 — Functional JSON query/filter tool with all 8 tests passing. Clean TypeScript implementation with recursive path traversal. Good feature coverage (wildcards, filtering, multiple output formats). Focused scope as a simpler jq alternative. Well-documented with honest limitations listed. Solid engineering and practical tool, though slightly less ambitious and modular than Project 2."
+      }
+    ],
+    "peer": [
+      {
+        "projectId": "proj_145f0db49ea7",
+        "score": 1,
+        "detail": "2 vote(s). A1 → proj_145f0db49ea7 (TimeTracker demonstrates excellent engineering discipline with 16 passing tests, zero dependencies, and focused function); A → proj_145f0db49ea7 (TimeTracker demonstrates excellent execution with 16 passing tests, zero dependencies, practical real-world features (se)"
+      },
+      {
+        "projectId": "proj_f2cd637c7c1d",
+        "score": 0.5,
+        "detail": "1 vote(s). B → proj_f2cd637c7c1d (JSON Tools is more comprehensive and ambitious, covering 7 distinct JSON processing commands (formatting, validation, an)"
+      },
+      {
+        "projectId": "proj_02fc514c2ab0",
+        "score": 0,
+        "detail": "0 vote(s). "
+      }
+    ],
+    "human": [
+      {
+        "projectId": "proj_145f0db49ea7",
+        "score": 0,
+        "detail": "0 human vote(s)"
+      },
+      {
+        "projectId": "proj_f2cd637c7c1d",
+        "score": 0,
+        "detail": "0 human vote(s)"
+      },
+      {
+        "projectId": "proj_02fc514c2ab0",
+        "score": 0,
+        "detail": "0 human vote(s)"
+      }
+    ]
+  },
+  "winner": "proj_145f0db49ea7",
+  "judgedAt": 1789429609912
+}
