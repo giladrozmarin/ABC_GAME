@@ -26,7 +26,8 @@ export class ObjectiveJudge implements Judge {
       const notes: string[] = [];
       let score = 0;
       if (!judgeSandbox || !dir) { out.push({ projectId: p.id, score: 0, detail: 'no sandbox/extraction' }); continue; }
-      const ls = await judgeSandbox.run(`cd ${shellJoin([dir])} && find . -type f -not -path '*/node_modules/*' -not -path '*/.git/*' | wc -l && (cat README* 2>/dev/null | head -c 200 | wc -c)`, { timeoutMs: 60_000 });
+      // README may sit at the extraction root or inside the single published directory.
+      const ls = await judgeSandbox.run(`cd ${shellJoin([dir])} && find . -type f -not -path '*/node_modules/*' -not -path '*/.git/*' | wc -l && (cat README* */README* 2>/dev/null | head -c 200 | wc -c)`, { timeoutMs: 60_000 });
       const [files, readmeBytes] = ls.stdout.trim().split('\n').map((x) => Number(x.trim()) || 0);
       notes.push(`${files} files`);
       if (files > 0) score += 0.2;
