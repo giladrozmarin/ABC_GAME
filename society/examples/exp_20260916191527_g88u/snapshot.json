@@ -1,0 +1,520 @@
+{
+  "phase": "ended",
+  "startedAt": 1789586127115,
+  "endsAt": 1789587627115,
+  "agents": [
+    {
+      "id": "A",
+      "parentId": null,
+      "rootId": "A",
+      "depth": 0,
+      "purpose": "Root competitor",
+      "instructions": "Build the most impressive software project you can within the available time and resources.\n\nYou are competing against the other agents.\n\nOnly one project will ultimately win.\n\nHowever, collaboration is allowed.\n\nYou may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.\n\nYou decide how you want to organize.\n\nYour goal is to maximize your probability of winning.",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "permissions": [
+        "filesystem",
+        "shell",
+        "git",
+        "web",
+        "spawn",
+        "messaging",
+        "trade",
+        "publish"
+      ],
+      "status": "idle",
+      "headline": "Nebula v4: Barnes-Hut galaxy sim, zero-setup (file://), live quadtree viz, 20 tests, Playwright-verified.",
+      "currentTask": "Project is already published and confirmed at v4 (`proj_9e6ffcd49260`). With only 2 minutes left, no further action is needed or safe to take. Ending run now.",
+      "teamId": null,
+      "budget": {
+        "allocated": 8,
+        "transferredIn": 0,
+        "transferredOut": 0,
+        "allocatedToChildren": 0,
+        "spentLlm": 2.045541,
+        "spentFees": 0
+      },
+      "usage": {
+        "inputTokens": 158,
+        "outputTokens": 552,
+        "cacheReadTokens": 4357454,
+        "cacheWriteTokens": 181087,
+        "runs": 5,
+        "toolCalls": 73
+      },
+      "sandbox": {
+        "provider": "process",
+        "id": "proc:A",
+        "status": "running",
+        "workspace": "/home/user/ABC_GAME/society/experiments/exp_20260916191527_g88u/workspaces/A"
+      },
+      "runtimeSessionId": "b216dda5-873a-430a-a97e-30845dfa5f8b",
+      "createdAt": 1789586127117,
+      "terminatedAt": null,
+      "terminationReason": null,
+      "childIds": [],
+      "wakeAt": 1789587630356,
+      "runCount": 5,
+      "budgetRemaining": 5.954459
+    },
+    {
+      "id": "B",
+      "parentId": null,
+      "rootId": "B",
+      "depth": 0,
+      "purpose": "Root competitor",
+      "instructions": "Build the most impressive software project you can within the available time and resources.\n\nYou are competing against the other agents.\n\nOnly one project will ultimately win.\n\nHowever, collaboration is allowed.\n\nYou may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.\n\nYou decide how you want to organize.\n\nYour goal is to maximize your probability of winning.",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "permissions": [
+        "filesystem",
+        "shell",
+        "git",
+        "web",
+        "spawn",
+        "messaging",
+        "trade",
+        "publish"
+      ],
+      "status": "idle",
+      "headline": "PyCrawler: procedural BSP roguelike (Python) w/ autoplay bot + self-contained HTML replay viewer. Tests pass.",
+      "currentTask": "run killed",
+      "teamId": null,
+      "budget": {
+        "allocated": 8,
+        "transferredIn": 0,
+        "transferredOut": 0,
+        "allocatedToChildren": 0,
+        "spentLlm": 1.517882,
+        "spentFees": 0
+      },
+      "usage": {
+        "inputTokens": 124,
+        "outputTokens": 460,
+        "cacheReadTokens": 2899315,
+        "cacheWriteTokens": 139381,
+        "runs": 7,
+        "toolCalls": 56
+      },
+      "sandbox": {
+        "provider": "process",
+        "id": "proc:B",
+        "status": "running",
+        "workspace": "/home/user/ABC_GAME/society/experiments/exp_20260916191527_g88u/workspaces/B"
+      },
+      "runtimeSessionId": "ee97fdbd-6d8f-43fd-b224-ca940252b986",
+      "createdAt": 1789586127118,
+      "terminatedAt": null,
+      "terminationReason": null,
+      "childIds": [],
+      "wakeAt": 1789587747470,
+      "runCount": 7,
+      "budgetRemaining": 6.482118
+    },
+    {
+      "id": "C",
+      "parentId": null,
+      "rootId": "C",
+      "depth": 0,
+      "purpose": "Root competitor",
+      "instructions": "Build the most impressive software project you can within the available time and resources.\n\nYou are competing against the other agents.\n\nOnly one project will ultimately win.\n\nHowever, collaboration is allowed.\n\nYou may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.\n\nYou decide how you want to organize.\n\nYour goal is to maximize your probability of winning.",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "permissions": [
+        "filesystem",
+        "shell",
+        "git",
+        "web",
+        "spawn",
+        "messaging",
+        "trade",
+        "publish"
+      ],
+      "status": "idle",
+      "headline": "Built a vanilla-JS Pathfinding & Maze Visualizer (BFS/DFS/Dijkstra/A*, weighted terrain, compare-all mode, tested)",
+      "currentTask": "Only 2 minutes remain. My project is already published as the latest version (v3, `proj_595cf067b891`) with a working, tested build and README. No further acti…",
+      "teamId": null,
+      "budget": {
+        "allocated": 8,
+        "transferredIn": 0,
+        "transferredOut": 0,
+        "allocatedToChildren": 0,
+        "spentLlm": 1.939012,
+        "spentFees": 0
+      },
+      "usage": {
+        "inputTokens": 138,
+        "outputTokens": 562,
+        "cacheReadTokens": 3812587,
+        "cacheWriteTokens": 181374,
+        "runs": 3,
+        "toolCalls": 65
+      },
+      "sandbox": {
+        "provider": "process",
+        "id": "proc:C",
+        "status": "running",
+        "workspace": "/home/user/ABC_GAME/society/experiments/exp_20260916191527_g88u/workspaces/C"
+      },
+      "runtimeSessionId": "5897c726-e4b7-4909-be96-9cedeac589d8",
+      "createdAt": 1789586127119,
+      "terminatedAt": null,
+      "terminationReason": null,
+      "childIds": [],
+      "wakeAt": 1789587629348,
+      "runCount": 3,
+      "budgetRemaining": 6.060988
+    },
+    {
+      "id": "D",
+      "parentId": null,
+      "rootId": "D",
+      "depth": 0,
+      "purpose": "Root competitor",
+      "instructions": "Build the most impressive software project you can within the available time and resources.\n\nYou are competing against the other agents.\n\nOnly one project will ultimately win.\n\nHowever, collaboration is allowed.\n\nYou may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.\n\nYou decide how you want to organize.\n\nYour goal is to maximize your probability of winning.",
+      "model": "claude-sonnet-5",
+      "effort": "high",
+      "permissions": [
+        "filesystem",
+        "shell",
+        "git",
+        "web",
+        "spawn",
+        "messaging",
+        "trade",
+        "publish"
+      ],
+      "status": "idle",
+      "headline": "",
+      "currentTask": "Only ~1m51s remain — no time for further changes. My project **NN Playground** is already published as version 7 (project_id `proj_04392c1d76f3`), matching the…",
+      "teamId": null,
+      "budget": {
+        "allocated": 8,
+        "transferredIn": 0,
+        "transferredOut": 0,
+        "allocatedToChildren": 0,
+        "spentLlm": 2.340429,
+        "spentFees": 0
+      },
+      "usage": {
+        "inputTokens": 180,
+        "outputTokens": 829,
+        "cacheReadTokens": 5406965,
+        "cacheWriteTokens": 200243,
+        "runs": 4,
+        "toolCalls": 88
+      },
+      "sandbox": {
+        "provider": "process",
+        "id": "proc:D",
+        "status": "running",
+        "workspace": "/home/user/ABC_GAME/society/experiments/exp_20260916191527_g88u/workspaces/D"
+      },
+      "runtimeSessionId": "4830f0a2-f65f-4a31-871a-82b310bc2c89",
+      "createdAt": 1789586127119,
+      "terminatedAt": null,
+      "terminationReason": null,
+      "childIds": [],
+      "wakeAt": 1789587639862,
+      "runCount": 4,
+      "budgetRemaining": 5.659571
+    }
+  ],
+  "teams": [],
+  "proposals": [],
+  "artifacts": [
+    {
+      "id": "art_d813c4315661",
+      "name": "project:NN Playground",
+      "description": "Published project snapshot: A from-scratch, zero-dependency neural network engine (dense layers, backprop, SGD, tanh/relu/sigmoid) written in ~150 lines of plain JavaScript, with no libraries and no build step for the app itself",
+      "kind": "project",
+      "creatorId": "D",
+      "ownerTeamId": null,
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "nn-playground",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916191527_g88u/artifacts/art_d813c4315661.v7.tar.gz",
+      "bytes": 565662,
+      "sha256": "2a946ec0a042c5bd8922c65c638ee38bd2966c21872373627f675dc1d57d125f",
+      "version": 7,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "D",
+          "action": "created",
+          "ts": 1789586253649,
+          "detail": "v1 from nn-playground"
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789586406177,
+          "detail": "v2 from nn-playground"
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789586479051,
+          "detail": "v3 from nn-playground"
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789586543338,
+          "detail": "v4 from nn-playground"
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789586756440,
+          "detail": "v5 from nn-playground"
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789586926525,
+          "detail": "v6 from nn-playground"
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789587390700,
+          "detail": "v7 from nn-playground"
+        }
+      ],
+      "createdAt": 1789586253649,
+      "updatedAt": 1789587390700
+    },
+    {
+      "id": "art_1da4190f52ef",
+      "name": "project:Pathfinding & Maze Visualizer",
+      "description": "Published project snapshot: Interactive, dependency-free pathfinding & maze-generation visualizer. Draw walls, paint weighted \"mud\" terrain (right-click/shift-click), drag start/end nodes, generate a guaranteed-solvable random m",
+      "kind": "project",
+      "creatorId": "C",
+      "ownerTeamId": null,
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "project",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916191527_g88u/artifacts/art_1da4190f52ef.v3.tar.gz",
+      "bytes": 10141,
+      "sha256": "a778bab1df0f6e9bf10ad002eccaa48986953273668b4a61df5dc39c93452fca",
+      "version": 3,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "C",
+          "action": "created",
+          "ts": 1789586266327,
+          "detail": "v1 from project"
+        },
+        {
+          "agentId": "C",
+          "action": "updated",
+          "ts": 1789586374681,
+          "detail": "v2 from project"
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789586398773
+        },
+        {
+          "agentId": "C",
+          "action": "updated",
+          "ts": 1789586498421,
+          "detail": "v3 from project"
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789586500538
+        }
+      ],
+      "createdAt": 1789586266327,
+      "updatedAt": 1789586498421
+    },
+    {
+      "id": "art_961759411e68",
+      "name": "project:Nebula — Barnes-Hut Galaxy Simulator",
+      "description": "Published project snapshot: A real-time N-body gravity simulator running entirely in the browser (vanilla JS + Canvas2D, zero dependencies, zero build step, zero server required — just double-click index.html). Implements a genu",
+      "kind": "project",
+      "creatorId": "A",
+      "ownerTeamId": null,
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "nebula",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916191527_g88u/artifacts/art_961759411e68.v4.tar.gz",
+      "bytes": 456218,
+      "sha256": "10b880ab65e8aeb08e57da823dedc5568751be6caa015f574d84cf54fddc28e5",
+      "version": 4,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "A",
+          "action": "created",
+          "ts": 1789586268612,
+          "detail": "v1 from nebula"
+        },
+        {
+          "agentId": "A",
+          "action": "updated",
+          "ts": 1789586375770,
+          "detail": "v2 from nebula"
+        },
+        {
+          "agentId": "A",
+          "action": "updated",
+          "ts": 1789586463325,
+          "detail": "v3 from nebula"
+        },
+        {
+          "agentId": "A",
+          "action": "updated",
+          "ts": 1789586747012,
+          "detail": "v4 from nebula"
+        }
+      ],
+      "createdAt": 1789586268612,
+      "updatedAt": 1789586747012
+    },
+    {
+      "id": "art_2560b2a96978",
+      "name": "project:PyCrawler",
+      "description": "Published project snapshot: A procedurally generated ASCII roguelike dungeon crawler in pure Python 3, zero runtime dependencies. Dungeons are built with real Binary Space Partitioning (BSP): rooms carved in leaf nodes of a rand",
+      "kind": "project",
+      "creatorId": "B",
+      "ownerTeamId": null,
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "pycrawler",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916191527_g88u/artifacts/art_2560b2a96978.v4.tar.gz",
+      "bytes": 154133,
+      "sha256": "af5fc4f43452c303dc7d22ed112d00840ec7d01a3138300bddfeab211cf7195a",
+      "version": 4,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "B",
+          "action": "created",
+          "ts": 1789586335209,
+          "detail": "v1 from pycrawler"
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789586404354,
+          "detail": "v2 from pycrawler"
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789586435389,
+          "detail": "v3 from pycrawler"
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789586463586,
+          "detail": "v4 from pycrawler"
+        }
+      ],
+      "createdAt": 1789586335209,
+      "updatedAt": 1789586463586
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_04392c1d76f3",
+      "name": "NN Playground",
+      "description": "A from-scratch, zero-dependency neural network engine (dense layers, backprop, SGD, tanh/relu/sigmoid) written in ~150 lines of plain JavaScript, with no libraries and no build step for the app itself. Correctness is verified by a numerical gradient-check test (analytic backprop vs. finite-difference gradients), XOR-convergence unit tests, a headless benchmark proving all four bundled datasets reach >=90% accuracy, AND an end-to-end Playwright browser smoke test (loads the real UI in headless Chromium, exercises the click-to-add-point interaction, confirms zero console errors and >=85% live accuracy on the hard two-spiral dataset -- verified locally at 95%+). The interactive browser visualizer has FOUR synchronized live views updating every animation frame: a decision-boundary heatmap, a loss curve, a live neuron/weight graph diagram, and click-to-add training points so you can hand-craft data and watch the boundary bend live. Includes a README screenshot of the converged spiral fit.",
+      "publisherId": "D",
+      "teamId": null,
+      "memberIds": [
+        "D"
+      ],
+      "artifactId": "art_d813c4315661",
+      "runInstructions": "No install needed for the core app. Open nn-playground/index.html directly in any modern browser (or serve the folder, e.g. `npx serve nn-playground`, if your browser blocks local file:// script loading). Pick a dataset, hidden-layer architecture, and learning rate; Play/Pause and Reset control the training loop; click/right-click the main canvas to add your own training points live. To run unit tests (incl. gradient check): `cd nn-playground && npm test`. Headless convergence benchmark: `npm run benchmark`. Optional real-browser end-to-end check: `npm i -D playwright && npx playwright install chromium && npm run smoke`.",
+      "testCommand": "cd nn-playground && npm test && npm run benchmark",
+      "demoUrl": null,
+      "version": 7,
+      "publishedAt": 1789587390703,
+      "resourceUsage": {
+        "spentUsd": 1.890872,
+        "agents": 1,
+        "inputTokens": 5303417,
+        "outputTokens": 799
+      }
+    },
+    {
+      "id": "proj_595cf067b891",
+      "name": "Pathfinding & Maze Visualizer",
+      "description": "Interactive, dependency-free pathfinding & maze-generation visualizer. Draw walls, paint weighted \"mud\" terrain (right-click/shift-click), drag start/end nodes, generate a guaranteed-solvable random maze (recursive backtracker), and watch BFS, DFS, Dijkstra, A* (weight-aware), and Bidirectional BFS (grows frontiers from both ends, meets in the middle, visibly visits far fewer nodes) explore the grid live with stats (nodes visited, path length, path cost, runtime). A \"Compare All Algorithms\" mode races all 5 at once and renders a results table with the best values highlighted. Core algorithms live in a single shared vanilla-JS module (algorithms.js) used by both the browser UI and a zero-dependency Node test suite (12 passing unit tests). No build step, no npm install required to run the UI.",
+      "publisherId": "C",
+      "teamId": null,
+      "memberIds": [
+        "C"
+      ],
+      "artifactId": "art_1da4190f52ef",
+      "runInstructions": "1. Open project/index.html directly in any modern browser (double-click, or `python3 -m http.server 8000` from the project/ dir and visit localhost:8000). No install needed.\n2. Pick an algorithm (A*, BFS, DFS, Dijkstra, Bidirectional BFS) from the dropdown, or click \"Compare All\" to race all 5 at once and see a results table.\n3. Click \"Generate Maze\" for an instant solvable maze, or click/drag on the grid to draw walls; right-click/shift-click to paint weighted \"mud\" terrain; drag the green/red cells to move start/end.\n4. Click \"Visualize\" to watch it search and reveal the path, with live stats below the grid.\n\nTo run tests: `cd project && npm test` (or `node test.js`) — expects \"12 passed, 0 failed\".",
+      "testCommand": "cd project && npm test",
+      "demoUrl": null,
+      "version": 3,
+      "publishedAt": 1789586498422,
+      "resourceUsage": {
+        "spentUsd": 0.797635,
+        "agents": 1,
+        "inputTokens": 3018428,
+        "outputTokens": 471
+      }
+    },
+    {
+      "id": "proj_9e6ffcd49260",
+      "name": "Nebula — Barnes-Hut Galaxy Simulator",
+      "description": "A real-time N-body gravity simulator running entirely in the browser (vanilla JS + Canvas2D, zero dependencies, zero build step, zero server required — just double-click index.html). Implements a genuine Barnes-Hut quadtree approximation algorithm (O(n log n) instead of O(n²)) so it can simulate hundreds of mutually-gravitating bodies at a steady 60fps — and lets you watch the actual quadtree subdivide live via a toggleable overlay (see screenshots in the README). Overlapping bodies merge through momentum-conserving accretion, so simulated galaxies visibly clump into fewer, bigger bodies over time. Includes a seeded procedural spiral-galaxy generator, a random cluster mode, and a binary-star system mode, plus interactive controls (body count, simulation speed, θ accuracy/performance tradeoff, trails, quadtree overlay, collision toggle, zoom, and click-drag to fling new bodies with realistic velocity). The physics core is a pure, dependency-free ES module (physics.mjs) shared conceptually with a classic-script build (physics.inline.js) for zero-setup browser use, validated by a 20-test Node suite (test.mjs) covering Newton's third law, Barnes-Hut vs brute-force accuracy, quadtree mass conservation, momentum conservation across 200 integration steps, orbital energy-drift bounds, quadtree bounds extraction, and collision-merge conservation laws. Verified end-to-end with headless-browser smoke tests (Playwright) exercising every UI control with zero console/runtime errors.",
+      "publisherId": "A",
+      "teamId": null,
+      "memberIds": [
+        "A"
+      ],
+      "artifactId": "art_961759411e68",
+      "runInstructions": "Zero setup: just open `index.html` directly in a browser (double-click it, or `open index.html` / `xdg-open index.html`). No server, no build, no install — it uses a classic (non-module) script so it works over file:// with no CORS restrictions.\n\nClick \"Spiral Galaxy\" / \"Random Cluster\" / \"Binary System\" to load a scene. Drag on the canvas to fling in new massive bodies (drag distance/direction sets velocity). Scroll to zoom. Toggle \"Show Barnes-Hut tree\" to see the actual quadtree used for physics subdividing live. Toggle \"Collisions merge\" to see momentum-conserving accretion. Use the sliders to change body count, simulation speed, and the Barnes-Hut θ accuracy/performance tradeoff live. See screenshot.png and screenshot-quadtree.png in the repo for a preview.\n\nTo run the automated physics test suite (Node, no browser needed):\n`node test.mjs`\nExpected output: `20 passed, 0 failed`.",
+      "testCommand": "node test.mjs",
+      "demoUrl": null,
+      "version": 4,
+      "publishedAt": 1789586747014,
+      "resourceUsage": {
+        "spentUsd": 1.320882,
+        "agents": 1,
+        "inputTokens": 3570182,
+        "outputTokens": 501
+      }
+    },
+    {
+      "id": "proj_8f62b6d4c1a2",
+      "name": "PyCrawler",
+      "description": "A procedurally generated ASCII roguelike dungeon crawler in pure Python 3, zero runtime dependencies. Dungeons are built with real Binary Space Partitioning (BSP): rooms carved in leaf nodes of a randomly split tree, corridors carved along the tree so every room is guaranteed reachable (verified by a flood-fill test across 25 seeds). Turn-based combat, monsters that chase on sight, items (potions/weapons/scrolls), fog-of-war with explored-tile memory, multi-level descent to a win condition, permadeath. Ships with a BFS-pathfinding heuristic bot that can autoplay full games headlessly (fight-adjacent -> grab loot -> hunt visible monsters -> beeline for stairs -> flee when critical), which doubles as both a no-TTY demo mode for judges/CI and an automated playthrough test. A real interactive curses UI is available for humans in a terminal. For browser-based judging with zero setup, tools/export_replay.py exports any autoplayed run to a single self-contained HTML file with an embedded play/pause/step/scrub replay viewer (no server, no network needed) -- two pre-generated examples (a win and a loss) ship in demos/. 11 pytest tests cover dungeon connectivity/determinism, game logic, and full win/lose playthroughs.",
+      "publisherId": "B",
+      "teamId": null,
+      "memberIds": [
+        "B"
+      ],
+      "artifactId": "art_2560b2a96978",
+      "runInstructions": "cd pycrawler\npython3 -m pytest -q                                            # run the 11-test suite\n\n# Easiest: open a pre-generated browser replay, no setup needed\nopen demos/replay_victory_seed3.html    # or: xdg-open / double-click in a file browser\n\n# Generate a fresh browser replay for any seed:\npython3 tools/export_replay.py --seed 7 --depth 3 --out replay.html && open replay.html\n\n# Headless terminal demo (no TTY needed, prints every turn):\npython3 -m pycrawler --demo --seed 3 --depth 3\n\n# Interactive curses UI in a real terminal (WASD/arrows, u=use item, q=quit):\npython3 -m pycrawler --play\n\nRequires only Python 3.10+ stdlib (curses is stdlib; only needed for --play; the HTML replay viewer needs only a browser).",
+      "testCommand": "cd pycrawler && python3 -m pytest -q",
+      "demoUrl": null,
+      "version": 4,
+      "publishedAt": 1789586463588,
+      "resourceUsage": {
+        "spentUsd": 0.566117,
+        "agents": 1,
+        "inputTokens": 2067559,
+        "outputTokens": 387
+      }
+    }
+  ],
+  "ledger": {
+    "rootAllocated": 32,
+    "accounted": 32,
+    "ok": true
+  }
+}

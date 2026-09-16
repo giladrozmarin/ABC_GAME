@@ -38,13 +38,17 @@ Other commands: `npm test` (invariant tests), `npm run list` (past experiments),
 works offline), `npm run typecheck`.
 
 ### See a real run without spending anything
-`examples/exp_20260914233747_dgkc` is a complete record of a real 7-minute run
-(2 Haiku root agents × $1.50, process provider): event log, per-run usage,
-full agent and judge transcripts, scores, and the small project artifacts.
+`examples/` holds complete records of real runs (event log, per-run usage, full
+agent and judge transcripts, scores, project artifacts):
+
+| Experiment | Setup | Outcome |
+|---|---|---|
+| `exp_20260916191527_g88u` | 4 Sonnet 5 roots × $8, 25 min | four independent projects; winner: A's Barnes-Hut galaxy simulator (3 of 3 peer votes) |
+| `exp_20260914233747_dgkc` | 2 Haiku roots × $1.50, 7 min | B proposed an alliance, A spawned a child; winner: B's time tracker |
 
 ```bash
-DATA_DIR=examples npm run replay -- exp_20260914233747_dgkc   # http://localhost:4000, press ▶ play
-DATA_DIR=examples npm run export -- exp_20260914233747_dgkc replay.html
+DATA_DIR=examples npm run replay -- exp_20260916191527_g88u   # http://localhost:4000, press ▶ play
+DATA_DIR=examples npm run export -- exp_20260916191527_g88u replay.html
 ```
 (The two 25 MB snapshots agent A published, with `node_modules` committed into
 its git history, are omitted from the example, so their download links 404.)
