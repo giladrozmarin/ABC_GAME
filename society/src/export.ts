@@ -19,7 +19,8 @@ export function exportExperiment(dir: string, experimentId: string): string {
   const scores = store.getKV('scores') ?? null;
   store.close();
   const cfg = exp.config ?? {};
-  const experiment = { id: experimentId, live: false, mode: exp.mode ?? cfg.mode ?? 'unknown', provider: cfg.sandboxProvider, runtime: exp.runtime ?? (exp.mode === 'mock' ? 'mock' : 'claude-code'), model: exp.model ?? cfg.agentModel, phase: 'replay', startedAt: exp.startedAt, endsAt: exp.endsAt, config: cfg, scores };
+  const phase = events.length && events[events.length - 1].type === 'EXPERIMENT_PHASE' && (events[events.length - 1].data as any).phase === 'ended' || scores ? 'ended' : 'running';
+  const experiment = { id: experimentId, live: phase !== 'ended', static: true, mode: exp.mode ?? cfg.mode ?? 'unknown', provider: cfg.sandboxProvider, runtime: exp.runtime ?? (exp.mode === 'mock' ? 'mock' : 'claude-code'), model: exp.model ?? cfg.agentModel, phase: 'replay', startedAt: exp.startedAt, endsAt: exp.endsAt, config: cfg, scores };
   const html = fs.readFileSync(path.join(UI_DIR, 'index.html'), 'utf8');
   const body = html.slice(html.indexOf('<body>') + 6, html.lastIndexOf('</body>')).replace(/<script[^>]*><\/script>/g, '');
   const css = fs.readFileSync(path.join(UI_DIR, 'style.css'), 'utf8');
@@ -30,7 +31,7 @@ export function exportExperiment(dir: string, experimentId: string): string {
   return [
     `<title>Agent Society Replay</title>`,
     `<style>${css}\nhtml,body{height:100%}</style>`,
-    body.replace('<div id="legend">', `<div id="static-note">Replay of experiment ${experimentId} — ${note}. Press ▶ play or drag the slider.</div>\n    <div id="legend">`),
+    body.replace('<div id="legend">', `<div id="static-note">${phase === 'ended' ? 'Replay of' : 'Snapshot of the still-running'} experiment ${experimentId} — ${note}. ${phase === 'ended' ? 'Press ▶ play or drag the slider.' : 'This page is republished every few minutes while the run continues.'}</div>\n    <div id="legend">`),
     `<script>${safe(fs.readFileSync(D3, 'utf8'))}</script>`,
     `<script>window.SOCIETY_STATIC = ${safe(JSON.stringify({ experiment, events }))};</script>`,
     `<script>${safe(js)}</script>`,

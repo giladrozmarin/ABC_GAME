@@ -241,7 +241,7 @@
       <div class="row"><span class="k">resources</span><span>${usd((p.resourceUsage || {}).spentUsd)} · ${(p.resourceUsage || {}).agents} agents</span></div>
       <div class="row"><span class="k">artifact</span><a href="/api/artifacts/${esc(p.artifactId)}">download</a></div>
       ${s ? `<div class="row"><span class="k">score</span><b>${(s.total * 100).toFixed(0)}%</b></div>${Object.entries(s.components).map(([k, v]) => `<div class="row"><span class="k">${k} (w=${v.weight})</span><span title="${esc(v.detail)}">${(v.score * 100).toFixed(0)}%</span></div><div class="muted" style="font-size:11px">${esc(v.detail.slice(0, 220))}</div>`).join('')}` : ''}
-      ${experiment && experiment.live ? `<button class="vote" data-vote="${esc(p.id)}">Human vote</button>` : ''}
+      ${experiment && experiment.live && !experiment.static ? `<button class="vote" data-vote="${esc(p.id)}">Human vote</button>` : ''}
     </div>`; }).join('');
     el.querySelectorAll('button.vote').forEach((b) => b.addEventListener('click', () => fetch('/api/vote', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ projectId: b.dataset.vote, voter: voterId() }) })));
   }
@@ -301,7 +301,7 @@
   function loadHello(msg) {
     experiment = msg.experiment; allEvents = msg.events; if (live) cursor = allEvents.length;
     $('#exp-id').textContent = experiment.id; $('#mode-badge').textContent = experiment.live ? `${experiment.mode} · ${experiment.provider} · ${experiment.runtime}` : `replay · ${experiment.mode} · ${experiment.runtime || ''}`; $('#mode-badge').className = `badge ${experiment.mode}`;
-    $('#live-dot').classList.toggle('live', !!experiment.live); $('#btn-live').classList.add('active'); $('#btn-live').textContent = experiment.live ? 'LIVE' : 'END'; $('#btn-end').style.display = experiment.live ? '' : 'none';
+    $('#live-dot').classList.toggle('live', !!experiment.live); $('#btn-live').classList.add('active'); $('#btn-live').textContent = experiment.live ? 'LIVE' : 'END'; $('#btn-end').style.display = experiment.live && !experiment.static ? '' : 'none';
     renderAll();
   }
   function connect() {
