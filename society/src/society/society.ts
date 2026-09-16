@@ -177,6 +177,7 @@ export class Society {
   }
 
   chargeFee(id: string, usd: number, reason: string) {
+    if (this.getAgent(id).free) return; // free assistants have no budget; their messages and proposals are free
     this.ledger.chargeFee(id, usd, reason);
     this.bus.emitEvent('BUDGET_SPENT', id, { usd, reason, remaining: this.ledger.remaining(id) });
   }

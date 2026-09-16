@@ -43,6 +43,10 @@ describe('free assistants', () => {
     expect(f.budget.freeSpent).toBeCloseTo(1.5);
     expect(s.remaining(a.id)).toBe(20);
     expect(s.ledger.audit().ok).toBe(true);
+    // free assistants can report back to their parent without a budget
+    s.send(f.id, a.id, 'results attached');
+    expect(s.peekInbox(a.id).length).toBe(1);
+    expect(s.remaining(f.id)).toBe(0);
     expect(() => s.spawn(f.id, req(0, { free: true }))).toThrow(/cannot spawn free/);
     expect(() => s.activateFreeWindow(f.id)).toThrow(/cannot open/);
     a.freeUntil = Date.now() - 1;
