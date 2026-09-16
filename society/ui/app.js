@@ -17,7 +17,7 @@
       const a = e.agentId ? st.agents.get(e.agentId) : null;
       switch (e.type) {
         case 'EXPERIMENT_STARTED': st.startedAt = e.ts; st.endsAt = d.endsAt; st.mode = d.mode; st.phase = 'running'; break;
-        case 'EXPERIMENT_PHASE': st.phase = d.phase; break;
+        case 'EXPERIMENT_PHASE': st.phase = d.phase; if (d.endsAt) st.endsAt = d.endsAt; break;
         case 'AGENT_CREATED': st.agents.set(d.id, { id: d.id, parentId: d.parentId, depth: d.depth, purpose: d.purpose, model: d.model, permissions: d.permissions, status: 'provisioning', teamId: d.teamId, headline: '', task: '', allocated: d.budgetAllocated, remaining: d.budgetAllocated, spent: 0, fees: 0, in: 0, out: 0, toChildren: 0, runs: 0, children: [], createdAt: e.ts, sandbox: 'starting', lastRun: null, tokens: 0, free: !!d.free }); if (d.parentId && st.agents.get(d.parentId)) { const p = st.agents.get(d.parentId); p.children.push(d.id); p.toChildren += d.budgetAllocated; p.remaining -= d.budgetAllocated; } if (d.teamId && st.teams.get(d.teamId) && !st.teams.get(d.teamId).members.includes(d.id)) st.teams.get(d.teamId).members.push(d.id); break;
         case 'AGENT_STATUS': if (a) a.status = d.status; break;
         case 'AGENT_ACTIVITY': if (a) a.task = d.detail; break;
@@ -59,7 +59,7 @@
     const d = e.data || {}; const who = e.agentId ? `<span class="who">${esc(e.agentId)}</span> ` : '';
     switch (e.type) {
       case 'EXPERIMENT_STARTED': return `Experiment started: ${d.rootAgents} root agents × ${usd(d.rootBudgetUsd)} · ${esc(d.model)} · ${esc(d.mode)} mode`;
-      case 'EXPERIMENT_PHASE': return `Phase → <b>${esc(d.phase)}</b>${d.reason ? ` (${esc(d.reason)})` : ''}`;
+      case 'EXPERIMENT_PHASE': return d.phase === 'paused' ? `<b>Game paused</b> (provider usage limit) until ${d.until ? fmtT(d.until) : '?'} — ${esc(d.reason)}` : `Phase → <b>${esc(d.phase)}</b>${d.reason ? ` (${esc(d.reason)})` : ''}`;
       case 'AGENT_CREATED': return d.parentId ? `${who}spawned by <b>${esc(d.byAgent)}</b>: “${esc(d.purpose)}” with ${usd(d.budgetAllocated)}` : `${who}created (root) with ${usd(d.budgetAllocated)}`;
       case 'AGENT_STATUS': return `${who}is now ${esc(d.status)}${d.detail ? ` — ${esc(d.detail)}` : ''}`;
       case 'AGENT_ACTIVITY': return `${who}${esc(d.detail)}`;

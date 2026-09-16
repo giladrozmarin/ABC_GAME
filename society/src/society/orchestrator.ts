@@ -41,6 +41,9 @@ export class Orchestrator {
   private timer: NodeJS.Timeout | null = null;
   private ticking = false;
   private finalCallSent = false;
+  /** Provider usage limit hit: game clock is frozen until this time and no runs start. */
+  pausedUntil = 0;
+  private lastTickAt = Date.now();
   private lastActivityEmit = new Map<string, number>();
   private gatewaySpend = new Map<string, number>();
   serviceSpend = 0; // judge / non-agent LLM spend (gateway mode)
@@ -140,6 +143,19 @@ export class Orchestrator {
       const s = this.society;
       if (s.phase !== 'running') return;
       const now = Date.now();
+      const sinceLast = now - this.lastTickAt;
+      this.lastTickAt = now;
+      if (this.pausedUntil) {
+        if (now < this.pausedUntil) {
+          // Freeze the game clock: deadline and grant timing slide forward by the paused time.
+          s.endsAt += sinceLast; s.startedAt += sinceLast;
+          for (const a of s.aliveAgents) if (a.freeUntil) a.freeUntil += sinceLast;
+          return;
+        }
+        this.pausedUntil = 0;
+        this.bus.emitEvent('EXPERIMENT_PHASE', null, { phase: 'running', reason: 'usage limit reset; clock resumed', endsAt: s.endsAt });
+        for (const a of s.aliveAgents) { a.wakeAt = now; if (a.status === 'failed') { a.status = 'idle'; this.errorStreak.delete(a.id); } }
+      }
       if (now >= s.endsAt) { await this.endExperiment('deadline reached'); return; }
       const finalCallAt = s.endsAt - Math.min(300, this.cfg.experimentDurationSec / 6) * 1000;
       if (!this.finalCallSent && now >= finalCallAt) {
@@ -261,6 +277,12 @@ export class Orchestrator {
     this.bus.emitEvent('AGENT_RUN_ENDED', agent.id, { runId, costUsd: round(result.costUsd), exitReason: result.exitReason, turns: result.turns, toolCalls: result.toolCalls, durationSec: Math.round((Date.now() - startedAt) / 1000), summary: truncate(result.finalText, 500), error: result.error ? truncate(result.error, 500) : undefined, budgetRemaining: round(s.remaining(agent.id)) });
     agent.currentTask = result.exitReason === 'completed' ? truncate(result.finalText.split('\n')[0] ?? '', 160) : `run ${result.exitReason}`;
     if (agent.status === 'terminated' || agent.status === 'failed') return;
+    if (result.exitReason === 'error' && /session limit|usage limit|rate limit|resets \d/i.test(result.error ?? '')) {
+      // Not the agent's fault: pause the whole game until the provider window resets.
+      this.pauseForLimit(result.error ?? '');
+      s.setStatus(agent.id, 'idle');
+      return;
+    }
     if (result.exitReason === 'error') {
       const streak = (this.errorStreak.get(agent.id) ?? 0) + 1;
       this.errorStreak.set(agent.id, streak);
@@ -463,6 +485,24 @@ export class Orchestrator {
       const r = await h.result;
       return r.finalText || 'The god is silent this time. Trust your own judgement.';
     } finally { await sb.destroy().catch(() => {}); }
+  }
+
+  /** Parse "resets 8:30pm (UTC)" style hints; default to a 5-minute pause, re-checked by the next run attempt. */
+  pauseForLimit(message: string) {
+    const now = Date.now();
+    let until = now + 5 * 60_000;
+    const m = message.match(/resets?\s+(\d{1,2})(?::(\d{2}))?\s*(am|pm)\s*\(UTC\)/i);
+    if (m) {
+      let h = Number(m[1]) % 12; if (m[3].toLowerCase() === 'pm') h += 12;
+      const d = new Date(now); d.setUTCHours(h, Number(m[2] ?? 0), 30, 0);
+      let t = d.getTime(); if (t < now) t += 24 * 3600_000;
+      if (t - now < 6 * 3600_000) until = t;
+    }
+    if (until <= this.pausedUntil) return;
+    this.pausedUntil = until;
+    for (const r of this.runs.values()) void r.handle.kill('error');
+    this.bus.emitEvent('EXPERIMENT_PHASE', null, { phase: 'paused', reason: message.slice(0, 200), until });
+    console.log(`[orchestrator] usage limit hit; game paused until ${new Date(until).toISOString()}`);
   }
 
   /** Human-readable summary of an agent for logs/UI. */
