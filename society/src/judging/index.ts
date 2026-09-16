@@ -34,7 +34,8 @@ export class ObjectiveJudge implements Judge {
       if (p.runInstructions.length > 20) score += 0.1;
       if (p.testCommand) {
         const install = `(test -f package.json && (npm ci --silent >/dev/null 2>&1 || npm install --silent >/dev/null 2>&1)); (test -f requirements.txt && pip install -q -r requirements.txt >/dev/null 2>&1); true`;
-        const t = await judgeSandbox.run(`cd ${shellJoin([dir])} && ${install} && timeout 180 bash -lc ${shellJoin([p.testCommand])}`, { timeoutMs: 240_000 });
+        // Try the command from the extraction root and, if that fails, from the single top-level directory (covers both `path: "."` and `path: "project"` publishes).
+        const t = await judgeSandbox.run(`cd ${shellJoin([dir])} && run_tests() { (${install}) && timeout 180 bash -lc ${shellJoin([p.testCommand])}; }; run_tests && exit 0; sub=$(ls -d */ 2>/dev/null | head -1); [ -n "$sub" ] && [ "$(ls -d */ | wc -l)" = 1 ] && cd "$sub" && run_tests`, { timeoutMs: 480_000 });
         if (t.exitCode === 0) { score += 0.5; notes.push(`tests passed (${p.testCommand})`); } else notes.push(`tests failed exit ${t.exitCode}: ${(t.stderr || t.stdout).trim().slice(-200)}`);
       } else notes.push('no test command');
       out.push({ projectId: p.id, score: Math.min(1, score), detail: notes.join('; ') });
@@ -153,7 +154,9 @@ export async function runJudging(orch: Orchestrator, judges: Judge[] = [new Obje
         const dir = path.posix.join(judgeSandbox.workspace, 'projects', p.id);
         const tmp = `${dir}.tar.gz`;
         await judgeSandbox.writeFile(tmp, fs.readFileSync(art.storagePath));
-        await judgeSandbox.run(`mkdir -p ${shellJoin([dir])} && tar xzf ${shellJoin([tmp])} -C ${shellJoin([dir])} --strip-components=1 2>/dev/null || tar xzf ${shellJoin([tmp])} -C ${shellJoin([dir])}; rm -f ${shellJoin([tmp])}`);
+        // Extract exactly as published: a project shared from `path: "project"` lands at <dir>/project, so the
+        // agent's own run/test instructions (written relative to its workspace) stay valid for the judges.
+        await judgeSandbox.run(`mkdir -p ${shellJoin([dir])} && tar xzf ${shellJoin([tmp])} -C ${shellJoin([dir])}; rm -f ${shellJoin([tmp])}`);
         extracted.set(p.id, dir);
       }
     } catch (e) { console.error('[judging] judge sandbox failed', e); }
