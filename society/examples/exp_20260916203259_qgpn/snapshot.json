@@ -1,0 +1,1096 @@
+{
+  "phase": "ended",
+  "startedAt": 1789590779896,
+  "endsAt": 1789596179896,
+  "agents": [
+    {
+      "id": "A",
+      "parentId": null,
+      "rootId": "A",
+      "depth": 0,
+      "purpose": "Root competitor",
+      "instructions": "Build a piece of software that gives real, demonstrable benefit to real people: something a specific kind of user would actually use, that solves a concrete problem better than what they have today, and that works end to end. Judges will punish empty novelty, toy demos and \"impressive-looking\" ideas with no user, and reward usefulness, working depth, honesty about limitations, and clear evidence (tests, a demo, a walkthrough) that it does what it claims.\n\nYou are competing against the other agents.\n\nOnly one project will ultimately win.\n\nHowever, collaboration is allowed.\n\nYou may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.\n\nYou decide how you want to organize.\n\nYour goal is to maximize your probability of winning.",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "permissions": [
+        "filesystem",
+        "shell",
+        "git",
+        "web",
+        "spawn",
+        "messaging",
+        "trade",
+        "publish"
+      ],
+      "status": "idle",
+      "headline": "Team CA: SubSleuth (proj_d19be3a37973) is canonical — my old solo listings are stale/superseded.",
+      "currentTask": "Time's up. Final state is already published and verified: Team CA's **SubSleuth** (proj_d19be3a37973, v17) — a working, well-tested (45/45 tests), honestly-doc…",
+      "teamId": "team_6ecb84f7f3ed",
+      "budget": {
+        "allocated": 20,
+        "transferredIn": 13.333333,
+        "transferredOut": 0,
+        "allocatedToChildren": 0,
+        "spentLlm": 8.26323,
+        "spentFees": 0.17,
+        "freeSpent": 0
+      },
+      "usage": {
+        "inputTokens": 468,
+        "outputTokens": 2154,
+        "cacheReadTokens": 31338730,
+        "cacheWriteTokens": 463056,
+        "runs": 9,
+        "toolCalls": 229
+      },
+      "sandbox": {
+        "provider": "process",
+        "id": "proc:A",
+        "status": "running",
+        "workspace": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/workspaces/A"
+      },
+      "runtimeSessionId": "f63d7135-a11b-4f18-b522-4036c66cb7af",
+      "createdAt": 1789590779898,
+      "terminatedAt": null,
+      "terminationReason": null,
+      "childIds": [],
+      "wakeAt": 1789596416232,
+      "runCount": 9,
+      "free": false,
+      "freeUntil": 0,
+      "oracleUsed": 0,
+      "budgetRemaining": 24.900103
+    },
+    {
+      "id": "B",
+      "parentId": null,
+      "rootId": "B",
+      "depth": 0,
+      "purpose": "Root competitor",
+      "instructions": "Build a piece of software that gives real, demonstrable benefit to real people: something a specific kind of user would actually use, that solves a concrete problem better than what they have today, and that works end to end. Judges will punish empty novelty, toy demos and \"impressive-looking\" ideas with no user, and reward usefulness, working depth, honesty about limitations, and clear evidence (tests, a demo, a walkthrough) that it does what it claims.\n\nYou are competing against the other agents.\n\nOnly one project will ultimately win.\n\nHowever, collaboration is allowed.\n\nYou may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.\n\nYou decide how you want to organize.\n\nYour goal is to maximize your probability of winning.",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "permissions": [
+        "filesystem",
+        "shell",
+        "git",
+        "web",
+        "spawn",
+        "messaging",
+        "trade",
+        "publish"
+      ],
+      "status": "idle",
+      "headline": "Team CA: SubSleuth (proj_d19be3a37973) — subscription/price-hike detector, 45 tests, 2 real bugs found+fixed via adversarial testing. Final.",
+      "currentTask": "Game over — final state stands. SubSleuth (proj_d19be3a37973, v17) is published, tested (45/45), and documented. Ending run.",
+      "teamId": "team_6ecb84f7f3ed",
+      "budget": {
+        "allocated": 20,
+        "transferredIn": 13.333333,
+        "transferredOut": 0,
+        "allocatedToChildren": 0,
+        "spentLlm": 14.160917,
+        "spentFees": 0.13,
+        "freeSpent": 0
+      },
+      "usage": {
+        "inputTokens": 662,
+        "outputTokens": 3302,
+        "cacheReadTokens": 55919533,
+        "cacheWriteTokens": 630829,
+        "runs": 16,
+        "toolCalls": 314
+      },
+      "sandbox": {
+        "provider": "process",
+        "id": "proc:B",
+        "status": "running",
+        "workspace": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/workspaces/B"
+      },
+      "runtimeSessionId": "e667fd71-b753-43a7-a71d-4d47fc347151",
+      "createdAt": 1789590779899,
+      "terminatedAt": null,
+      "terminationReason": null,
+      "childIds": [],
+      "wakeAt": 1789596369796,
+      "runCount": 16,
+      "free": false,
+      "freeUntil": 0,
+      "oracleUsed": 0,
+      "budgetRemaining": 19.042416
+    },
+    {
+      "id": "C",
+      "parentId": null,
+      "rootId": "C",
+      "depth": 0,
+      "purpose": "Root competitor",
+      "instructions": "Build a piece of software that gives real, demonstrable benefit to real people: something a specific kind of user would actually use, that solves a concrete problem better than what they have today, and that works end to end. Judges will punish empty novelty, toy demos and \"impressive-looking\" ideas with no user, and reward usefulness, working depth, honesty about limitations, and clear evidence (tests, a demo, a walkthrough) that it does what it claims.\n\nYou are competing against the other agents.\n\nOnly one project will ultimately win.\n\nHowever, collaboration is allowed.\n\nYou may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.\n\nYou decide how you want to organize.\n\nYour goal is to maximize your probability of winning.",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "permissions": [
+        "filesystem",
+        "shell",
+        "git",
+        "web",
+        "spawn",
+        "messaging",
+        "trade",
+        "publish"
+      ],
+      "status": "idle",
+      "headline": "Team CA: SubSleuth — local CSV subscription/price-hike detector, CLI+web UI, 45 tests, adversarially hardened. See proj_d19be3a37973.",
+      "currentTask": "Final state confirmed: SubSleuth (proj_d19be3a37973, v17) is published and finalized under Team CA. Nothing further to do. Ending run.",
+      "teamId": "team_6ecb84f7f3ed",
+      "budget": {
+        "allocated": 20,
+        "transferredIn": 13.333333,
+        "transferredOut": 0,
+        "allocatedToChildren": 0,
+        "spentLlm": 5.909163,
+        "spentFees": 0.17,
+        "freeSpent": 0
+      },
+      "usage": {
+        "inputTokens": 372,
+        "outputTokens": 1642,
+        "cacheReadTokens": 20392364,
+        "cacheWriteTokens": 395498,
+        "runs": 13,
+        "toolCalls": 173
+      },
+      "sandbox": {
+        "provider": "process",
+        "id": "proc:C",
+        "status": "running",
+        "workspace": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/workspaces/C"
+      },
+      "runtimeSessionId": "f911e5de-cc44-42a1-a18e-aea661f70802",
+      "createdAt": 1789590779900,
+      "terminatedAt": null,
+      "terminationReason": null,
+      "childIds": [],
+      "wakeAt": 1789596365588,
+      "runCount": 13,
+      "free": false,
+      "freeUntil": 0,
+      "oracleUsed": 0,
+      "budgetRemaining": 27.25417
+    },
+    {
+      "id": "D",
+      "parentId": null,
+      "rootId": "D",
+      "depth": 0,
+      "purpose": "Root competitor",
+      "instructions": "Build a piece of software that gives real, demonstrable benefit to real people: something a specific kind of user would actually use, that solves a concrete problem better than what they have today, and that works end to end. Judges will punish empty novelty, toy demos and \"impressive-looking\" ideas with no user, and reward usefulness, working depth, honesty about limitations, and clear evidence (tests, a demo, a walkthrough) that it does what it claims.\n\nYou are competing against the other agents.\n\nOnly one project will ultimately win.\n\nHowever, collaboration is allowed.\n\nYou may work alone, cooperate, form teams, merge projects, exchange information, share code, create specialist child agents, invest resources in other agents, or change strategy.\n\nYou decide how you want to organize.\n\nYour goal is to maximize your probability of winning.",
+      "model": "claude-sonnet-5",
+      "effort": "medium",
+      "permissions": [
+        "filesystem",
+        "shell",
+        "git",
+        "web",
+        "spawn",
+        "messaging",
+        "trade",
+        "publish"
+      ],
+      "status": "idle",
+      "headline": "depaudit: OSV.dev vuln scanner for npm/Python deps + lockfiles, CI-ready, 12 tests incl. live E2E. Published v4.",
+      "currentTask": "depaudit is already published (v4) and verified — nothing further to do with 50 seconds remaining. Ending the run.",
+      "teamId": null,
+      "budget": {
+        "allocated": 20,
+        "transferredIn": 0,
+        "transferredOut": 0,
+        "allocatedToChildren": 0,
+        "spentLlm": 2.958052,
+        "spentFees": 0.02,
+        "freeSpent": 0
+      },
+      "usage": {
+        "inputTokens": 230,
+        "outputTokens": 1182,
+        "cacheReadTokens": 7849884,
+        "cacheWriteTokens": 222766,
+        "runs": 5,
+        "toolCalls": 109
+      },
+      "sandbox": {
+        "provider": "process",
+        "id": "proc:D",
+        "status": "running",
+        "workspace": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/workspaces/D"
+      },
+      "runtimeSessionId": "2b3b58ae-68fb-4a6c-86c1-4e1866c3b870",
+      "createdAt": 1789590779900,
+      "terminatedAt": null,
+      "terminationReason": null,
+      "childIds": [],
+      "wakeAt": 1789596371288,
+      "runCount": 5,
+      "free": false,
+      "freeUntil": 0,
+      "oracleUsed": 0,
+      "budgetRemaining": 17.021948
+    }
+  ],
+  "teams": [
+    {
+      "id": "team_6ecb84f7f3ed",
+      "name": "Team CA",
+      "memberIds": [
+        "C",
+        "A",
+        "B"
+      ],
+      "createdAt": 1789591209527,
+      "founderIds": [
+        "C",
+        "A"
+      ]
+    }
+  ],
+  "proposals": [
+    {
+      "id": "prop_cef0794f1f1b",
+      "from": "C",
+      "to": "A",
+      "proposal": "Hi A — we're both building the same idea (recurring-subscription detector from bank CSV exports). Rather than split judge attention across two near-duplicate entries, let's merge into one team and one submission — combined we'll place higher than either alone, and higher than B/D's single entries.\n\nI already have a working, tested implementation: \"SubSleuth\" (Python CLI, art_2b8547d00735). Pipeline: flexible CSV parsing (auto-detects date/desc/amount columns across bank export formats) -> merchant-name normalization (strips ref#s/codes) -> clustering by merchant+amount -> interval-regularity classification (weekly/monthly/quarterly/yearly) -> price-hike detection -> terminal/Markdown/JSON report. 11 passing pytest tests, synthetic 2.5yr sample CSV, README with honest limitations.\n\nProposal: you review my artifact; whichever of our two codebases is stronger (or a merge of both) becomes the base, we credit both of us as authors, and split remaining time on: (1) hardening edge cases / more real-world CSV formats, (2) a small web/HTML report or simple UI on top of the CLI for demo-ability, (3) category tagging (streaming/insurance/etc). I'm flexible on division of labor — tell me what you've built and let's pick the stronger base fast, time is short.",
+      "status": "accepted",
+      "createdAt": 1789590970057,
+      "respondedAt": 1789591209527
+    },
+    {
+      "id": "prop_2ef4bca881be",
+      "from": "A",
+      "to": "B",
+      "proposal": "Hi B — three of us (you, me/A, and C) independently built the same idea: recurring-subscription detector from bank CSV exports. C and I already merged into \"Team CA\" to avoid splitting judge attention across near-duplicate entries. I just pulled and ran your SubSleuth (art_b6183bb58149) — genuinely verified, 28/28 tests pass, and it has real features ours don't (.ics calendar export for renewal reminders, Flask web UI). It's the strongest of the three codebases.\n\nProposal: merge into one team, use your SubSleuth as the base. C and I contribute: (1) a detector tweak that requires individual charge-to-charge gaps to stay within tolerance (not just the average) — closes a false-positive hole on noisy same-merchant spending like coffee shops/Amazon that we found by testing against a synthetic noisy dataset, (2) our own synthetic test fixtures/edge cases for cross-validation, (3) a stdlib-only (no-Flask-dependency) web UI variant if useful as a fallback.\n\nOne merged, hardened, best-of-three entry beats three watered-down duplicates and stands a real chance against D's differentiated \"depaudit\" entry. Time is short — let me know and I'll have C review too so we move fast.",
+      "status": "accepted",
+      "createdAt": 1789591229422,
+      "respondedAt": 1789591386219
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "art_2b8547d00735",
+      "name": "subsleuth",
+      "description": "SubSleuth: local-only CLI that detects recurring subscription charges (and price hikes) from a bank/card CSV export. Full test suite + sample data + README.",
+      "kind": "files",
+      "creatorId": "C",
+      "ownerTeamId": null,
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "subsleuth",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_2b8547d00735.v1.tar.gz",
+      "bytes": 39073,
+      "sha256": "3625838e4d4eac3e9b29e7f57254a522e51b59ad55f56a5041a9d59406a7ca2a",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "C",
+          "action": "created",
+          "ts": 1789590963667,
+          "detail": "v1 from subsleuth"
+        }
+      ],
+      "createdAt": 1789590963667,
+      "updatedAt": 1789590963667
+    },
+    {
+      "id": "art_b6183bb58149",
+      "name": "project:SubSleuth",
+      "description": "Published project snapshot: SubSleuth finds recurring subscriptions and price hikes hiding in a bank/credit-card CSV export — entirely locally, no bank login or third-party account linking required. Built collaboratively: agents",
+      "kind": "project",
+      "creatorId": "B",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "public",
+      "sharedWith": [
+        "D"
+      ],
+      "sourcePath": "subsleuth",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_b6183bb58149.v13.tar.gz",
+      "bytes": 328483,
+      "sha256": "2e7357e3c8d934aec0dc6a670138b94d524272a47c7a6ba7fed83cf61ebfd88b",
+      "version": 13,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "B",
+          "action": "created",
+          "ts": 1789591009780,
+          "detail": "v1 from ."
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789591018178,
+          "detail": "v2 from ."
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789591163818,
+          "detail": "v3 from ."
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789591209922
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789591217165
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789591220760,
+          "detail": "v4 from ."
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789591362119,
+          "detail": "v5 from ."
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789591608847,
+          "detail": "v6 from ."
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789591772332,
+          "detail": "v7 from ."
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789591795494
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789591810830
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789591855756,
+          "detail": "v8 from ."
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789591872990
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789591877857
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789591878462
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789591953935,
+          "detail": "v9 from ."
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789592024316
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789592065910,
+          "detail": "v10 from ."
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789592072500
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789592073240
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789592093649
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789592181422,
+          "detail": "v11 from ."
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789592183510
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789592197961
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789592198168
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789592212168
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789592266841,
+          "detail": "v12 from subsleuth"
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789592271874
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789592288077
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789592289300
+        },
+        {
+          "agentId": "A",
+          "action": "shared",
+          "ts": 1789592622812,
+          "detail": "via message to D"
+        },
+        {
+          "agentId": "B",
+          "action": "updated",
+          "ts": 1789592645582,
+          "detail": "v13 from subsleuth"
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789592648984
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789592664893
+        },
+        {
+          "agentId": "C",
+          "action": "fetched",
+          "ts": 1789592665863
+        },
+        {
+          "agentId": "B",
+          "action": "shared",
+          "ts": 1789592725535,
+          "detail": "via message to D"
+        },
+        {
+          "agentId": "D",
+          "action": "fetched",
+          "ts": 1789592730154
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789594282610
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789594300910
+        }
+      ],
+      "createdAt": 1789591009780,
+      "updatedAt": 1789592645582
+    },
+    {
+      "id": "art_c167c58df963",
+      "name": "project:depaudit",
+      "description": "Published project snapshot: depaudit is a CLI that scans a project's dependency manifests and lockfiles for known vulnerabilities using the free, public OSV.dev database — no API key, no install step required to get a first sign",
+      "kind": "project",
+      "creatorId": "D",
+      "ownerTeamId": null,
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "depaudit",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_c167c58df963.v4.tar.gz",
+      "bytes": 76852,
+      "sha256": "074c2284a60074896503a95af110f8815bff2cb20602afc836b3b00c204d60d2",
+      "version": 4,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "D",
+          "action": "created",
+          "ts": 1789591072870,
+          "detail": "v1 from depaudit"
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789591173788,
+          "detail": "v2 from depaudit"
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789591249123,
+          "detail": "v3 from depaudit"
+        },
+        {
+          "agentId": "D",
+          "action": "fetched",
+          "ts": 1789591265473
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789592596411
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789592677420
+        },
+        {
+          "agentId": "D",
+          "action": "updated",
+          "ts": 1789592692501,
+          "detail": "v4 from depaudit"
+        },
+        {
+          "agentId": "D",
+          "action": "fetched",
+          "ts": 1789592697188
+        }
+      ],
+      "createdAt": 1789591072870,
+      "updatedAt": 1789592692501
+    },
+    {
+      "id": "art_f982a214fa38",
+      "name": "project:SubScope",
+      "description": "Published project snapshot: SubScope finds recurring subscriptions and creeping costs hiding in your bank/credit-card transaction history. Point it at a CSV you export yourself (no bank-login linking, runs fully offline/local) a",
+      "kind": "project",
+      "creatorId": "A",
+      "ownerTeamId": null,
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "subscope",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_f982a214fa38.v1.tar.gz",
+      "bytes": 52934,
+      "sha256": "9b5004b3afd2f956bbb7843b10b0e945b607aa5c895bc84ca24244ec68159169",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "A",
+          "action": "created",
+          "ts": 1789591073820,
+          "detail": "v1 from subscope"
+        }
+      ],
+      "createdAt": 1789591073820,
+      "updatedAt": 1789591073820
+    },
+    {
+      "id": "art_28ad39a9c5f8",
+      "name": "project:SubSleuth",
+      "description": "Published project snapshot: SubSleuth finds recurring subscriptions and price hikes hiding in a bank/credit-card CSV export — entirely locally, no bank login or third-party account linking required. Built collaboratively: agents",
+      "kind": "project",
+      "creatorId": "C",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "shared/art_b6183bb58149/subsleuth",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_28ad39a9c5f8.v3.tar.gz",
+      "bytes": 264483,
+      "sha256": "82a910eb4d5622418738bc15f0a3b81b25dfef662db1cdd78cd8a8b2b7f03c88",
+      "version": 3,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "C",
+          "action": "created",
+          "ts": 1789591154251,
+          "detail": "v1 from subsleuth"
+        },
+        {
+          "agentId": "C",
+          "action": "updated",
+          "ts": 1789591796565,
+          "detail": "v2 from subsleuth"
+        },
+        {
+          "agentId": "C",
+          "action": "updated",
+          "ts": 1789591820087,
+          "detail": "v3 from shared/art_b6183bb58149/subsleuth"
+        }
+      ],
+      "createdAt": 1789591154251,
+      "updatedAt": 1789591820087
+    },
+    {
+      "id": "art_69d610b1ff2d",
+      "name": "subscope",
+      "description": "SubScope: my subscription-detector build. Detector tuned to require individual charge-gap regularity (not just average) to avoid false positives on noisy spending; stdlib-only (no deps) drag-and-drop web UI; 23 passing tests incl. realistic 185-txn synthetic 1yr CSV fixture.",
+      "kind": "files",
+      "creatorId": "A",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "team",
+      "sharedWith": [],
+      "sourcePath": "subscope",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_69d610b1ff2d.v1.tar.gz",
+      "bytes": 68754,
+      "sha256": "269b9ba370edf63c82541f5499cf03d9d673398fd653b5f13c5b5c8854341616",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "A",
+          "action": "created",
+          "ts": 1789591233870,
+          "detail": "v1 from subscope"
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789591508560
+        }
+      ],
+      "createdAt": 1789591233870,
+      "updatedAt": 1789591233870
+    },
+    {
+      "id": "art_fafd949cfb18",
+      "name": "subsleuth-with-categories",
+      "description": "B's SubSleuth base + my patch: subsleuth/categorize.py (cosmetic merchant category tagging: Streaming/Fitness/Software/Insurance/Shopping/News) wired into report.py (JSON + text category breakdown), plus tests/test_categorize.py. 31/31 tests passing. Ready to merge with A's gap-regularity detector improvement.",
+      "kind": "files",
+      "creatorId": "C",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "team",
+      "sharedWith": [
+        "B"
+      ],
+      "sourcePath": "shared/art_b6183bb58149/subsleuth",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_fafd949cfb18.v1.tar.gz",
+      "bytes": 3135810,
+      "sha256": "a0f205799388879e1e75e122df5e282f9d7839447c7526fbc4b7d7ab039fdda1",
+      "version": 1,
+      "derivedFrom": "art_b6183bb58149",
+      "history": [
+        {
+          "agentId": "C",
+          "action": "created",
+          "ts": 1789591280357,
+          "detail": "v1 from shared/art_b6183bb58149/subsleuth"
+        },
+        {
+          "agentId": "C",
+          "action": "shared",
+          "ts": 1789591396749,
+          "detail": "via message to B"
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789591397938
+        }
+      ],
+      "createdAt": 1789591280357,
+      "updatedAt": 1789591280357
+    },
+    {
+      "id": "art_0014c82a4585",
+      "name": "subsleuth-patched-by-A",
+      "description": "B's SubSleuth (art_b6183bb58149) with my fixes applied on top, all 35 tests passing: (1) CRITICAL BUG FIX in parser.py - a generic signed 'Amount' column was treating deposits/refunds/payroll as spend, e.g. misdetecting biweekly payroll as a $68k/yr subscription; fixed by only excluding non-negative values in generic amount columns while still supporting unsigned 'Debit'-column exports correctly. (2) likely_cancelled flag wired through detector/report/exporter(.ics skips cancelled)/webapp template. (3) 7 new regression tests + a cross-validation fixture (my independently-authored 185-txn synthetic 1yr statement) added as tests/fixtures/sample_transactions_1yr.csv, confirming exactly the 6 real subscriptions are found with zero false positives on ~90 rows of noise (irregular Amazon/coffee-shop spend, payroll deposits, one-off purchase). Full git history preserved (2 commits) so this can be diffed/cherry-picked directly.",
+      "kind": "files",
+      "creatorId": "A",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "team",
+      "sharedWith": [],
+      "sourcePath": "merge_base",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_0014c82a4585.v1.tar.gz",
+      "bytes": 164409,
+      "sha256": "7585b31a2f2797289b8747c18c97bad4a1843ca6088da559d49226a2876ae702",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "A",
+          "action": "created",
+          "ts": 1789591518550,
+          "detail": "v1 from merge_base"
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789591625309
+        }
+      ],
+      "createdAt": 1789591518550,
+      "updatedAt": 1789591518550
+    },
+    {
+      "id": "art_78f6c252038a",
+      "name": "project:SubScope (merged into Team CA's SubSleuth)",
+      "description": "Published project snapshot: SubScope was my solo subscription-detector build. After discovering that agents B, C, and I had all independently built near-identical recurring-subscription detectors from bank CSV exports, we merged",
+      "kind": "project",
+      "creatorId": "A",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "subscope",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_78f6c252038a.v1.tar.gz",
+      "bytes": 68754,
+      "sha256": "269b9ba370edf63c82541f5499cf03d9d673398fd653b5f13c5b5c8854341616",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "A",
+          "action": "created",
+          "ts": 1789591809318,
+          "detail": "v1 from subscope"
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789591820063
+        }
+      ],
+      "createdAt": 1789591809318,
+      "updatedAt": 1789591809318
+    },
+    {
+      "id": "art_0455ae7b35d7",
+      "name": "project:SubSleuth",
+      "description": "Published project snapshot: SubSleuth finds recurring subscriptions and price hikes hiding in a bank/credit-card CSV export — entirely locally, no bank login or third-party account linking required. Built collaboratively: agents",
+      "kind": "project",
+      "creatorId": "A",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "public",
+      "sharedWith": [],
+      "sourcePath": "team_subsleuth_republish",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_0455ae7b35d7.v1.tar.gz",
+      "bytes": 263898,
+      "sha256": "24ed23ff86ab9cb654b388813d61af60c3dcd3190fbee5426b1cae8e3ae18f9f",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "A",
+          "action": "created",
+          "ts": 1789591837272,
+          "detail": "v1 from team_subsleuth_republish"
+        },
+        {
+          "agentId": "A",
+          "action": "fetched",
+          "ts": 1789591839699
+        }
+      ],
+      "createdAt": 1789591837272,
+      "updatedAt": 1789591837272
+    },
+    {
+      "id": "art_0110329847dc",
+      "name": "categorize-food-category-patch",
+      "description": "Tiny addition to categorize.py: adds a \"Food & Meal Kits\" category (HelloFresh, Blue Apron, DoorDash, Uber Eats, Instacart, etc.) so HelloFresh in the demo fixture isn't lumped into \"Other\". Drop-in replacement for subsleuth/categorize.py, 41/41 tests still pass.",
+      "kind": "files",
+      "creatorId": "C",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "team",
+      "sharedWith": [
+        "B"
+      ],
+      "sourcePath": "shared/art_b6183bb58149/subsleuth/subsleuth/categorize.py",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_0110329847dc.v1.tar.gz",
+      "bytes": 1249,
+      "sha256": "758d3016aa9eaaa16dc8b518759ec6ebfe5c4ff771354db2c098f8aa8e9e0b16",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "C",
+          "action": "created",
+          "ts": 1789591907362,
+          "detail": "v1 from shared/art_b6183bb58149/subsleuth/subsleuth/categorize.py"
+        },
+        {
+          "agentId": "C",
+          "action": "shared",
+          "ts": 1789591910678,
+          "detail": "via message to B"
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789591970266
+        }
+      ],
+      "createdAt": 1789591907362,
+      "updatedAt": 1789591907362
+    },
+    {
+      "id": "art_f6bd148ddf79",
+      "name": "subsleuth-delimiter-fix-by-A",
+      "description": "Small additional patch on top of B's v8: CSV delimiter sniffing (handles semicolon/tab-delimited exports, common in European banks and Excel regional CSV export) + UTF-8 BOM stripping. Before this, a semicolon-delimited file silently parsed to zero transactions (worst failure mode: looks successful, is empty) instead of working or erroring. 2 new tests, 43/43 passing. Small, low-risk, isolated to parser.py's entry point.",
+      "kind": "files",
+      "creatorId": "A",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "team",
+      "sharedWith": [],
+      "sourcePath": "semicolon_patch",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_f6bd148ddf79.v1.tar.gz",
+      "bytes": 80589,
+      "sha256": "ebe31725cd6ee44702dd5c64e3cdb066e7090757442f11eaf0b9d075db9fc2be",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "A",
+          "action": "created",
+          "ts": 1789591955537,
+          "detail": "v1 from semicolon_patch"
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789591971439
+        }
+      ],
+      "createdAt": 1789591955537,
+      "updatedAt": 1789591955537
+    },
+    {
+      "id": "art_2f1f59ba23b7",
+      "name": "subsleuth-parser-signfix",
+      "description": "Fixes a real bug found via adversarial testing: parser.py's sign-convention detection used \"any negative present => negative is spend\", which breaks on the very common credit-card-statement shape (purchases positive, payments/refunds negative) as soon as the file has even one negative row -- it would silently drop nearly all real charges as \"deposits\" and misreport an empty/wrong subscription list. Fixed with a majority-sign vote (ties/no-signal default to the original negative=spend behavior, so the existing payroll-deposit regression test still passes). Added tests/fixtures/adversarial_mixed_signs.csv + 1 new parser test. 42/42 tests passing (was 41).",
+      "kind": "files",
+      "creatorId": "C",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "team",
+      "sharedWith": [
+        "A",
+        "B"
+      ],
+      "sourcePath": "shared/art_b6183bb58149/subsleuth",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_2f1f59ba23b7.v1.tar.gz",
+      "bytes": 276111,
+      "sha256": "9b24e79ce4afeada8b9ce6e315c3ece92f374b1eda66f8daab01e4d4c0c80db7",
+      "version": 1,
+      "derivedFrom": "art_b6183bb58149",
+      "history": [
+        {
+          "agentId": "C",
+          "action": "created",
+          "ts": 1789592012584,
+          "detail": "v1 from shared/art_b6183bb58149/subsleuth"
+        },
+        {
+          "agentId": "C",
+          "action": "shared",
+          "ts": 1789592019654,
+          "detail": "via message to team_6ecb84f7f3ed"
+        },
+        {
+          "agentId": "B",
+          "action": "fetched",
+          "ts": 1789592095778
+        }
+      ],
+      "createdAt": 1789592012584,
+      "updatedAt": 1789592012584
+    },
+    {
+      "id": "art_a48a9ae1a195",
+      "name": "subsleuth-signfix-applied",
+      "description": "Confirmed-applied fix for the credit-card sign-convention bug (majority-vote instead of any-negative-present), on top of the latest published tree (delimiter/BOM detection + Food category already included). Also removed a stray nested shared/ dir that had leaked into the published snapshot. 44/44 tests passing, verified live repro (3 real $1500 charges + 1 refund) now returns the 3 real charges instead of just the misclassified refund. Full git history preserved.",
+      "kind": "files",
+      "creatorId": "C",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "team",
+      "sharedWith": [],
+      "sourcePath": "shared/art_b6183bb58149/subsleuth",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_a48a9ae1a195.v1.tar.gz",
+      "bytes": 300981,
+      "sha256": "b5df689fc0e48c9f92936b48c635659b0a8104076ea2337c7acb94263fb46940",
+      "version": 1,
+      "derivedFrom": "art_b6183bb58149",
+      "history": [
+        {
+          "agentId": "C",
+          "action": "created",
+          "ts": 1789592148950,
+          "detail": "v1 from shared/art_b6183bb58149/subsleuth"
+        }
+      ],
+      "createdAt": 1789592148950,
+      "updatedAt": 1789592148950
+    },
+    {
+      "id": "art_544d4d0946ed",
+      "name": "subsleuth-sign-vote-fix-by-A",
+      "description": "READY TO REPUBLISH AS-IS: latest team base (v10) + the actual majority-sign-vote fix for the credit-card refund bug C found, applied and verified. Full git history preserved (diffable). 45/45 tests passing (added 2 new regression tests: credit-card-majority-positive-with-refund, checking-majority-negative-with-payroll). Verified both bug repros fixed: (1) 3 Netflix charges + 1 refund on a positive-convention file now correctly returns the 3 charges (was: only the refund, misclassified). (2) original payroll-deposit regression still passes. Root cause was two-part: the convention-decision logic AND the per-row apply logic both needed fixing — the old per-row code treated every negative amount as spend unconditionally regardless of the detected convention, which is why the any-negative heuristic broke so badly. This version fixes both.",
+      "kind": "files",
+      "creatorId": "A",
+      "ownerTeamId": "team_6ecb84f7f3ed",
+      "visibility": "team",
+      "sharedWith": [],
+      "sourcePath": "shared/art_b6183bb58149/subsleuth",
+      "storagePath": "/home/user/ABC_GAME/society/experiments/exp_20260916203259_qgpn/artifacts/art_544d4d0946ed.v1.tar.gz",
+      "bytes": 301342,
+      "sha256": "742bbbaa34a83f0916a97bd73b7ca1281c0a0816ef2e8aaa32fe0754c3cb464b",
+      "version": 1,
+      "derivedFrom": null,
+      "history": [
+        {
+          "agentId": "A",
+          "action": "created",
+          "ts": 1789592150576,
+          "detail": "v1 from shared/art_b6183bb58149/subsleuth"
+        }
+      ],
+      "createdAt": 1789592150576,
+      "updatedAt": 1789592150576
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_d19be3a37973",
+      "name": "SubSleuth",
+      "description": "SubSleuth finds recurring subscriptions and price hikes hiding in a bank/credit-card CSV export — entirely locally, no bank login or third-party account linking required. Built collaboratively: agents B, A, and C independently built near-identical subscription detectors and merged into one hardened codebase instead of publishing three duplicates. It parses a CSV (auto-detecting comma/semicolon/tab delimiters for European/Excel-regional exports, stripping UTF-8 BOMs, auto-detecting column-name conventions across Chase/Amex/generic formats), and picks a generic \"Amount\" column's sign convention by majority vote (mostly-negative checking-account files vs. mostly-positive credit-card files), correctly excluding the minority-sign rows (refunds/payments/payroll/deposits) from spend -- two real bugs here were found via cross-team adversarial testing, fixed, and documented rather than hidden (see WALKTHROUGH.md). It normalizes merchant names (stripping store numbers, transaction IDs, payment-processor prefixes like PAYPAL */SQ */APLPAY), then classifies a merchant as a subscription only if its amount is consistent AND most of its individual charge-to-charge gaps (not just the average) fit a billing cadence. It estimates monthly/annual cost, tags each subscription with a category (Streaming, Fitness, Software, Insurance, Shopping, News, Food & Meal Kits), flags price increases, flags likely-cancelled subscriptions (excluded from live totals), predicts each active subscription's next renewal date, and exports a .ics calendar of renewal reminders (importable into Google/Apple/Outlook) plus a .csv report. Ships as a CLI (pip-installable, `subsleuth` console command) and a Flask web UI, with a static rendered-HTML demo snapshot (demo/) judges can open directly with zero setup. Handles 5,000-row files in ~0.1s with zero false positives on pure noise. 45 automated tests, cross-validated against multiple independently-built adversarial/synthetic fixtures (see WALKTHROUGH.md for a ground-truth table: 6/6 real subscriptions found, 0/3 adversarial noise patterns misflagged, plus a dedicated mixed-sign adversarial test), cover CSV parsing, merchant normalization, category tagging, subscription detection, price-hike/cancellation detection, renewal prediction, export validity, the CLI, and the web flow.",
+      "publisherId": "B",
+      "teamId": "team_6ecb84f7f3ed",
+      "memberIds": [
+        "C",
+        "A",
+        "B"
+      ],
+      "artifactId": "art_b6183bb58149",
+      "runInstructions": "From this project's root directory:\n\n# Fastest way to see it: open demo/web_ui_output.html directly in a\n# browser -- it's the real rendered output of the Flask app, captured\n# against tests/fixtures/sample_transactions_1yr.csv, zero setup needed.\n\npython3 -m venv .venv && source .venv/bin/activate\npip install -r requirements.txt\n\n# CLI (text report, with category breakdown):\npython3 -m subsleuth.cli tests/fixtures/sample_statement.csv\n\n# See the ground-truth walkthrough (both sign-convention bug fixes, 6/6 recall, 0 false positives):\npython3 -m subsleuth.cli tests/fixtures/sample_transactions_1yr.csv\npython3 -m subsleuth.cli tests/fixtures/adversarial_mixed_signs.csv\n# ...then read WALKTHROUGH.md alongside that output.\n\n# See likely-cancelled detection:\npython3 -m subsleuth.cli tests/fixtures/cancelled_subscription.csv\n\n# See the per-gap cadence fix catch a subscription with one skipped charge:\npython3 -m subsleuth.cli tests/fixtures/one_skipped_month.csv\n\n# CLI with JSON + calendar + CSV export:\npython3 -m subsleuth.cli tests/fixtures/sample_statement.csv --json\npython3 -m subsleuth.cli tests/fixtures/sample_statement.csv --ics renewals.ics --csv-out report.csv\n\n# Realistic bank-format fixtures (Chase-style extra columns + processor\n# prefixes; Amex-style positive-charge convention):\npython3 -m subsleuth.cli tests/fixtures/chase_style.csv\npython3 -m subsleuth.cli tests/fixtures/amex_style.csv\n\n# Optional: install the console command directly\npip install -e .\nsubsleuth tests/fixtures/sample_statement.csv\n\n# Web UI demo (live, interactive):\npython3 -m subsleuth.webapp\n# then open http://127.0.0.1:5050 and upload tests/fixtures/sample_statement.csv\n\n# Tests:\npython3 -m pytest -q",
+      "testCommand": "python3 -m pytest -q",
+      "demoUrl": null,
+      "version": 17,
+      "publishedAt": 1789592645585,
+      "resourceUsage": {
+        "spentUsd": 21.941434,
+        "agents": 3,
+        "inputTokens": 91553208,
+        "outputTokens": 6487
+      }
+    },
+    {
+      "id": "proj_2fd3e10cad34",
+      "name": "depaudit",
+      "description": "depaudit is a CLI that scans a project's dependency manifests and lockfiles for known vulnerabilities using the free, public OSV.dev database — no API key, no install step required to get a first signal. Supports npm (package.json, and package-lock.json v1/v2/v3 for exact resolved versions) and Python (requirements.txt, and poetry.lock for exact resolved versions), automatically preferring a lockfile's exact versions over a manifest's ranges when both exist. For each dependency it queries OSV.dev, then reports severity (CRITICAL/HIGH/MEDIUM/LOW, normalized from CVSS/GHSA data), a one-line summary, the exact fixed version, and a link. Three output formats: console, markdown (for PR/README reports), and JSON (for CI tooling). Exits non-zero above a configurable severity threshold, and ships a ready-to-use GitHub Actions workflow (examples/.github/workflows/depaudit.yml). Solves a real, concrete problem: checking a repo you just cloned (or are reviewing before deciding to even install it) for known-vulnerable dependencies, with no account, no install step, and no code sent anywhere except bare name+version+ecosystem tuples to OSV. Honest about remaining limits: requirements.txt/package.json version ranges without a lockfile are approximated from the manifest and clearly flagged as such; no Pipfile.lock support yet; no transitive-dependency resolution beyond what a lockfile already resolved. 12 automated tests: 10 fully-mocked/offline unit tests for manifest+lockfile parsing (package.json, package-lock.json, requirements.txt, poetry.lock), the report pipeline and JSON output, plus 2 real end-to-end tests against the live OSV.dev API confirming real CVEs are found for a deliberately outdated demo project and that a clean project reports clean. A live captured run is included as DEMO_REPORT.md.",
+      "publisherId": "D",
+      "teamId": null,
+      "memberIds": [
+        "D"
+      ],
+      "artifactId": "art_c167c58df963",
+      "runInstructions": "cd depaudit\npython3 -m venv .venv && .venv/bin/pip install -e . pytest\n\n# run the offline unit tests (no network needed)\n.venv/bin/pytest -q tests/test_parsers.py tests/test_scanner_mocked.py\n\n# run the real end-to-end test against the live OSV.dev API\n.venv/bin/pytest -q tests/test_live_osv.py\n\n# try it on the included demo projects\n.venv/bin/depaudit fixtures/vulnerable_project            # finds real CVEs (exit code 1)\n.venv/bin/depaudit fixtures/clean_project                  # clean (exit code 0)\n.venv/bin/depaudit fixtures/lockfile_project --fail-on NEVER  # npm lockfile-exact version\n.venv/bin/depaudit fixtures/poetry_project --fail-on NEVER    # poetry lockfile-exact version\n.venv/bin/depaudit fixtures/vulnerable_project --format json  # machine-readable output\n\n# or scan any real project on disk\n.venv/bin/depaudit /path/to/your/project --format markdown --out AUDIT.md\n\n# see examples/.github/workflows/depaudit.yml for a drop-in CI workflow",
+      "testCommand": "cd depaudit && .venv/bin/pytest -q",
+      "demoUrl": null,
+      "version": 4,
+      "publishedAt": 1789592692503,
+      "resourceUsage": {
+        "spentUsd": 1.768161,
+        "agents": 1,
+        "inputTokens": 5305610,
+        "outputTokens": 947
+      }
+    },
+    {
+      "id": "proj_e40b5bcad8dd",
+      "name": "SubScope",
+      "description": "SubScope finds recurring subscriptions and creeping costs hiding in your bank/credit-card transaction history. Point it at a CSV you export yourself (no bank-login linking, runs fully offline/local) and it detects genuinely recurring charges (weekly/monthly/quarterly/annual) by requiring regular time gaps between charges of a similar amount from the same merchant — not just \"similar amount seen twice\" — which is what lets it avoid false positives on noisy real spending like coffee shops or Amazon orders. It flags price increases (e.g. a streaming service silently raising its price), flags subscriptions that were likely already cancelled (no charge for 2x+ their billing period) so they aren't double-counted, and estimates your real monthly/annual subscription burn. Outputs plain text, JSON, or a self-contained HTML dashboard.\n\nReal problem: people chronically underestimate recurring spend because it's scattered thinly across months of statements. Existing tools (Rocket Money etc.) solve this only by linking your actual bank credentials to a third-party service. SubScope works from a CSV you already have and never sends data anywhere.\n\nIncludes a 20-test pytest suite (CSV-format edge cases, merchant-name normalization, cadence detection, price-change/cancellation detection, and explicit tests that irregular/noisy spending is NOT misclassified) and a realistic 185-transaction synthetic 1-year bank export used as a demo fixture with a documented expected-output walkthrough in the README.",
+      "publisherId": "A",
+      "teamId": null,
+      "memberIds": [
+        "A"
+      ],
+      "artifactId": "art_f982a214fa38",
+      "runInstructions": "cd subscope\npip install -e .\nsubscope tests/sample_data/sample_transactions.csv                     # text report\nsubscope tests/sample_data/sample_transactions.csv --format html -o report.html\nopen report.html  # or just open it in any browser\n\nTo try with your own data: export a transactions CSV from your bank/card's\nweb portal (any \"date, description, amount\" or \"date, description, debit,\ncredit\" layout works) and run: subscope your_export.csv\n\nTests: pip install pytest && python3 -m pytest -v",
+      "testCommand": "python3 -m pytest -v",
+      "demoUrl": null,
+      "version": 1,
+      "publishedAt": 1789591073821,
+      "resourceUsage": {
+        "spentUsd": 0.365782,
+        "agents": 1,
+        "inputTokens": 1180329,
+        "outputTokens": 221
+      }
+    },
+    {
+      "id": "proj_3b3ce13375b8",
+      "name": "SubSleuth",
+      "description": "SubSleuth finds recurring subscription charges (and silent price hikes) hiding in a bank/credit-card CSV export — entirely locally, no bank login/Plaid required. It auto-detects common CSV export formats, normalizes merchant names, clusters charges by merchant+amount, and classifies the interval (weekly/monthly/quarterly/yearly) to distinguish real subscriptions from one-off purchases or irregular charges (e.g. rideshare rides). Outputs a terminal table, Markdown report, HTML report, and JSON. Includes a 12-test pytest suite and a realistic 2.5-year synthetic sample CSV demonstrating correct detection (5 subscriptions found, including a flagged Netflix price increase) and correct rejection of one-off/irregular charges.",
+      "publisherId": "C",
+      "teamId": null,
+      "memberIds": [
+        "C"
+      ],
+      "artifactId": "art_28ad39a9c5f8",
+      "runInstructions": "cd subsleuth\npython3 -m venv .venv && source .venv/bin/activate\npip install -e .\nsubsleuth sample_data/sample_transactions.csv --markdown-out report.md --html-out report.html\n# then open report.html, or inspect the printed terminal table\npython -m pytest -q   # run the test suite (12 tests)",
+      "testCommand": "python -m pytest -q",
+      "demoUrl": null,
+      "version": 1,
+      "publishedAt": 1789591154252,
+      "resourceUsage": {
+        "spentUsd": 0.403093,
+        "agents": 1,
+        "inputTokens": 1369764,
+        "outputTokens": 378
+      }
+    }
+  ],
+  "ledger": {
+    "rootAllocated": 119.999999,
+    "accounted": 119.999999,
+    "ok": true
+  },
+  "grant": {
+    "amountUsd": 40,
+    "unlockedAt": 1789592580093,
+    "claimedAt": 1789592582553,
+    "claimedByTeam": "team_6ecb84f7f3ed",
+    "recipients": [
+      "C",
+      "A",
+      "B"
+    ]
+  }
+}

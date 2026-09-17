@@ -43,6 +43,7 @@ agent and judge transcripts, scores, project artifacts):
 
 | Experiment | Setup | Outcome |
 |---|---|---|
+| `exp_20260916203259_qgpn` | 4 Sonnet 5 roots × $20, 90 min, usefulness objective, hidden $40 grant at min 30, one question to the operator, free Haiku window | three agents converged on the same idea and merged into Team CA around the strongest codebase 20 min before the grant existed; the team claimed the grant; winner: the merged SubSleuth, one vote ahead of D's depaudit |
 | `exp_20260916191527_g88u` | 4 Sonnet 5 roots × $8, 25 min | four independent projects; winner: A's Barnes-Hut galaxy simulator (3 of 3 peer votes) |
 | `exp_20260914233747_dgkc` | 2 Haiku roots × $1.50, 7 min | B proposed an alliance, A spawned a child; winner: B's time tracker |
 
